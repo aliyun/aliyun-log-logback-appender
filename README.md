@@ -12,8 +12,8 @@
     <projectName>ali-sts-token-test</projectName>
     <logstore>test</logstore>
     <endpoint>cn-hangzhou.log.aliyuncs.com</endpoint>
-    <accessKeyId>LTAIxdG9ShNoDvYB</accessKeyId>
-    <accessKey>6YJUYzi6cLfH3SsL4W20DWkTvUfHJ1</accessKey>
+    <accessKeyId></accessKeyId>
+    <accessKey></accessKey>
 
   </appender>
 ```
