@@ -1,7 +1,9 @@
 package com.aliyun.openservices;
 
-import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggingEvent;
+import ch.qos.logback.classic.spi.StackTraceElementProxy;
+import ch.qos.logback.classic.spi.ThrowableProxyUtil;
+import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import com.aliyun.openservices.log.common.LogItem;
 import com.aliyun.openservices.log.producer.LogProducer;
@@ -11,15 +13,48 @@ import com.aliyun.openservices.log.producer.ProjectConfig;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+/**
+    ProducerConfig: Default value
+    public int packageTimeoutInMS = 3000; 指定被缓存日志的发送超时时间，如果缓存超时，则会被立即发送,单位毫秒
+    public int logsCountPerPackage = 4096; 指定每个缓存的日志包中包含日志数量的最大值,取值为1~4096
+    public int logsBytesPerPackage = 3145728; 指定每个缓存的日志包的大小上限,取值为1~5242880，单位为字节
+    public int memPoolSizeInByte = 104857600; 指定单个Producer实例可以使用的内存的上限,单位字节
+    public int retryTimes = 3; 指定发送失败时重试的次数
+    public int maxIOThreadSizeInPool = 8; 指定I/O线程池最大线程数量，主要用于发送数据到日志服务
+    public int shardHashUpdateIntervalInMS = 600000;
+ * @author 铁生
+ */
 public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
-    private ProducerConfig config = new ProducerConfig();
+
+    private ProducerConfig  producerConfig = new ProducerConfig();
+    private ProjectConfig    projectConfig = new ProjectConfig();
+
     private LogProducer producer;
-    private ProjectConfig projectConfig = new ProjectConfig();
-    private String logstore;
-    private String topic = "";
+
+    private String logstore; //
+    private String topic = ""; //
+
     private String timeZone = "UTC";
     private String timeFormat = "yyyy-MM-dd'T'HH:mmZ";
     private SimpleDateFormat formatter;
+
+    @Override
+    public void start(){
+        formatter = new SimpleDateFormat(timeFormat);
+        formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
+
+        producer = new LogProducer(producerConfig);
+        producer.setProjectConfig(projectConfig);
+
+        super.start();
+    }
+
+    @Override
+    public void stop(){
+        super.stop();
+        producer.flush();
+        producer.close();
+    }
 
     @Override
     public void append(E eventObject) {
@@ -36,38 +71,12 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         item.PushBack("time", formatter.format(new Date(event.getTimeStamp())));
         item.PushBack("level", event.getLevel().toString());
         item.PushBack("thread", event.getThreadName());
-        //item.PushBack("location", event.getMessage());
-        item.PushBack("message", event.getMessage());
-//        Map properties = event.getProperties();
-//        if (properties.size() > 0) {
-//            Object[] keys = properties.keySet().toArray();
-//            Arrays.sort(keys);
-//            for (int i = 0; i < keys.length; i++) {
-//                item.PushBack(keys[i].toString(), properties.get(keys[i])
-//                        .toString());
-//            }
-//        }
-        producer.send(projectConfig.projectName, logstore, topic, null,
-                logItems);
-        producer.flush();
-        try {
-            Thread.sleep(2 * config.packageTimeoutInMS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        item.PushBack("message", event.getFormattedMessage());
+        if(event.getThrowableProxy()!=null){
+            item.PushBack("exception", fullDump(event.getThrowableProxy().getStackTraceElementProxyArray()));
         }
-        System.out.println(eventObject);
 
-    }
-
-    @Override
-    public void start(){
-        formatter = new SimpleDateFormat(timeFormat);
-        formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
-
-        producer = new LogProducer(config);
-        producer.setProjectConfig(projectConfig);
-
-        super.start();
+        producer.send(projectConfig.projectName, logstore, topic, null, logItems);
     }
 
     public String getTimeFormat() {
@@ -80,13 +89,15 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
     }
 
-    public void close() {
-        producer.flush();
-        producer.close();
-    }
-
-    public boolean requiresLayout() {
-        return false;
+    private String fullDump(StackTraceElementProxy[] stackTraceElementProxyArray) {
+        StringBuilder builder = new StringBuilder();
+        for (StackTraceElementProxy step : stackTraceElementProxyArray) {
+            String string = step.toString();
+            builder.append(CoreConstants.TAB).append(string);
+            ThrowableProxyUtil.subjoinPackagingData(builder, step);
+            builder.append(CoreConstants.LINE_SEPARATOR);
+        }
+        return builder.toString();
     }
 
     public String getLogstore() {
@@ -115,6 +126,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
     }
 
+    // **** ==- ProjectConfig -== **********************
     public String getProjectName() {
         return projectConfig.projectName;
     }
@@ -155,60 +167,64 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         projectConfig.stsToken = stsToken;
     }
 
+    // **** ==- ProjectConfig (end) -== **********************
+
+
+    // **** ==- ProducerConfig (end) -== **********************
     public int getPackageTimeoutInMS() {
-        return config.packageTimeoutInMS;
+        return producerConfig.packageTimeoutInMS;
     }
 
     public void setPackageTimeoutInMS(int packageTimeoutInMS) {
-        config.packageTimeoutInMS = packageTimeoutInMS;
+        producerConfig.packageTimeoutInMS = packageTimeoutInMS;
     }
 
     public int getLogsCountPerPackage() {
-        return config.logsCountPerPackage;
+        return producerConfig.logsCountPerPackage;
     }
 
     public void setLogsCountPerPackage(int logsCountPerPackage) {
-        config.logsCountPerPackage = logsCountPerPackage;
+        producerConfig.logsCountPerPackage = logsCountPerPackage;
     }
 
     public int getLogsBytesPerPackage() {
-        return config.logsBytesPerPackage;
+        return producerConfig.logsBytesPerPackage;
     }
 
     public void setLogsBytesPerPackage(int logsBytesPerPackage) {
-        config.logsBytesPerPackage = logsBytesPerPackage;
+        producerConfig.logsBytesPerPackage = logsBytesPerPackage;
     }
 
     public int getMemPoolSizeInByte() {
-        return config.memPoolSizeInByte;
+        return producerConfig.memPoolSizeInByte;
     }
 
     public void setMemPoolSizeInByte(int memPoolSizeInByte) {
-        config.memPoolSizeInByte = memPoolSizeInByte;
+        producerConfig.memPoolSizeInByte = memPoolSizeInByte;
     }
 
     public int getIoThreadsCount() {
-        return config.maxIOThreadSizeInPool;
+        return producerConfig.maxIOThreadSizeInPool;
     }
 
     public void setIoThreadsCount(int ioThreadsCount) {
-        config.maxIOThreadSizeInPool = ioThreadsCount;
+        producerConfig.maxIOThreadSizeInPool = ioThreadsCount;
     }
 
     public int getShardHashUpdateIntervalInMS() {
-        return config.shardHashUpdateIntervalInMS;
+        return producerConfig.shardHashUpdateIntervalInMS;
     }
 
     public void setShardHashUpdateIntervalInMS(int shardHashUpdateIntervalInMS) {
-        config.shardHashUpdateIntervalInMS = shardHashUpdateIntervalInMS;
+        producerConfig.shardHashUpdateIntervalInMS = shardHashUpdateIntervalInMS;
     }
-
     public int getRetryTimes() {
-        return config.retryTimes;
+        return producerConfig.retryTimes;
     }
 
     public void setRetryTimes(int retryTimes) {
-        config.retryTimes = retryTimes;
+        producerConfig.retryTimes = retryTimes;
     }
+    // **** ==- ProducerConfig (end) -== **********************
 
 }
