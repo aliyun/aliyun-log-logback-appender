@@ -76,6 +76,12 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         item.PushBack("time", formatter.format(new Date(event.getTimeStamp())));
         item.PushBack("level", event.getLevel().toString());
         item.PushBack("thread", event.getThreadName());
+
+        StackTraceElement[] caller = event.getCallerData();
+        if(caller!=null || caller.length>0){
+            item.PushBack("location", caller[0].toString());
+        }
+
         item.PushBack("message", event.getFormattedMessage());
         if(event.getThrowableProxy()!=null){
             item.PushBack("exception", fullDump(event.getThrowableProxy().getStackTraceElementProxyArray()));
