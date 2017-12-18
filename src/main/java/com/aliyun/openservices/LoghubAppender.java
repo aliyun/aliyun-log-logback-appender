@@ -52,8 +52,13 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     @Override
     public void stop(){
         super.stop();
-        producer.flush();
-        producer.close();
+        try {
+            producer.flush();
+            producer.close();
+            Thread.sleep(2 * producerConfig.packageTimeoutInMS);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
