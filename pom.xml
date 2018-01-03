@@ -3,13 +3,32 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>com.aliyun.openservices</groupId>
-  <artifactId>aliyun-logback-appender</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <artifactId>aliyun-log-logback-appender</artifactId>
+  <version>0.1.1</version>
   <packaging>jar</packaging>
 
-  <name>logback-openservices</name>
-  <url>http://maven.apache.org</url>
-
+  <name>aliyun log logback appender</name>
+  <url>http://www.aliyun.com</url>
+  <description>aliyun log logback appender</description>
+  <licenses>
+    <license>
+      <name></name>
+      <url></url>
+      <distribution>repo</distribution>
+      <comments>Copyright (C) Alibaba Cloud Computing. All rights reserved.</comments>
+    </license>
+  </licenses>
+  <scm>
+    <url></url>
+    <connection></connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>aliyunproducts</id>
+      <name>Aliyun Log development team</name>
+      <email>aliyunsdk@aliyun.com</email>
+    </developer>
+  </developers>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
