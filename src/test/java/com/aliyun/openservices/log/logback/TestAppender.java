@@ -28,4 +28,12 @@ public class TestAppender {
         }
         System.out.println("done");
     }
+
+    @Test
+    public void testMultipleLogs() throws Exception {
+        log.warn("hello world1! ~~~");
+        log.warn("hello world2! ~~~");
+        log.warn("hello world3! ~~~");
+        System.out.println("done");
+    }
 }
