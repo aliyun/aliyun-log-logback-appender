@@ -41,6 +41,14 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     @Override
     public void start() {
+        try {
+            doStart();
+        } catch (Exception e) {
+            addError("Failed to start LoghubAppender.", e);
+        }
+    }
+
+    private void doStart() {
         formatter = new SimpleDateFormat(timeFormat);
         formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
 
@@ -52,21 +60,33 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     @Override
     public void stop() {
+        try {
+            doStop();
+        } catch (Exception e) {
+            addError("Failed to stop LoghubAppender.", e);
+        }
+    }
+
+    private void doStop() throws InterruptedException {
         if (!isStarted())
             return;
 
         super.stop();
-        try {
-            producer.flush();
-            Thread.sleep(2 * producerConfig.packageTimeoutInMS);
-            producer.close();
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        producer.flush();
+        Thread.sleep(2 * producerConfig.packageTimeoutInMS);
+        producer.close();
     }
 
     @Override
     public void append(E eventObject) {
+        try {
+            appendEvent(eventObject);
+        } catch (Exception e) {
+            addError("Failed to append event.", e);
+        }
+    }
+
+    private void appendEvent(E eventObject) {
         //init Event Object
         if (!(eventObject instanceof LoggingEvent)) {
             return;
