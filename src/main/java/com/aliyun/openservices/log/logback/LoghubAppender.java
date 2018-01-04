@@ -218,11 +218,11 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         producerConfig.memPoolSizeInByte = memPoolSizeInByte;
     }
 
-    public int getIoThreadsCount() {
+    public int getMaxIOThreadSizeInPool() {
         return producerConfig.maxIOThreadSizeInPool;
     }
 
-    public void setIoThreadsCount(int ioThreadsCount) {
+    public void setMaxIOThreadSizeInPool(int ioThreadsCount) {
         producerConfig.maxIOThreadSizeInPool = ioThreadsCount;
     }
 
