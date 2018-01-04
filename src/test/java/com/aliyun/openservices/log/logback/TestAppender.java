@@ -17,12 +17,6 @@ public class TestAppender {
     @Test
     public void testLog() throws Exception{
         log.warn("hello world! ~~~");
-        try {
-            ProducerConfig config = new ProducerConfig();
-            Thread.sleep(2 * config.packageTimeoutInMS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         System.out.println("done");
     }
 
