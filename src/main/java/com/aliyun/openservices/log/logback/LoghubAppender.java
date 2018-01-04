@@ -52,6 +52,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     @Override
     public void stop() {
+        if (!isStarted())
+            return;
+
         super.stop();
         try {
             producer.flush();
