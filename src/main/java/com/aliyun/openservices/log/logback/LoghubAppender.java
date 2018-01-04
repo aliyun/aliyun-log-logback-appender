@@ -14,20 +14,21 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
-    ProducerConfig: Default value
-    public int packageTimeoutInMS = 3000; 指定被缓存日志的发送超时时间，如果缓存超时，则会被立即发送,单位毫秒
-    public int logsCountPerPackage = 4096; 指定每个缓存的日志包中包含日志数量的最大值,取值为1~4096
-    public int logsBytesPerPackage = 3145728; 指定每个缓存的日志包的大小上限,取值为1~5242880，单位为字节
-    public int memPoolSizeInByte = 104857600; 指定单个Producer实例可以使用的内存的上限,单位字节
-    public int retryTimes = 3; 指定发送失败时重试的次数
-    public int maxIOThreadSizeInPool = 8; 指定I/O线程池最大线程数量，主要用于发送数据到日志服务
-    public int shardHashUpdateIntervalInMS = 600000;
+ * ProducerConfig: Default value
+ * public int packageTimeoutInMS = 3000; 指定被缓存日志的发送超时时间，如果缓存超时，则会被立即发送,单位毫秒
+ * public int logsCountPerPackage = 4096; 指定每个缓存的日志包中包含日志数量的最大值,取值为1~4096
+ * public int logsBytesPerPackage = 3145728; 指定每个缓存的日志包的大小上限,取值为1~5242880，单位为字节
+ * public int memPoolSizeInByte = 104857600; 指定单个Producer实例可以使用的内存的上限,单位字节
+ * public int retryTimes = 3; 指定发送失败时重试的次数
+ * public int maxIOThreadSizeInPool = 8; 指定I/O线程池最大线程数量，主要用于发送数据到日志服务
+ * public int shardHashUpdateIntervalInMS = 600000;
+ *
  * @author 铁生
  */
 public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
-    private ProducerConfig  producerConfig = new ProducerConfig();
-    private ProjectConfig    projectConfig = new ProjectConfig();
+    private ProducerConfig producerConfig = new ProducerConfig();
+    private ProjectConfig projectConfig = new ProjectConfig();
 
     private LogProducer producer;
 
@@ -39,7 +40,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     private SimpleDateFormat formatter;
 
     @Override
-    public void start(){
+    public void start() {
         formatter = new SimpleDateFormat(timeFormat);
         formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
 
@@ -50,7 +51,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     }
 
     @Override
-    public void stop(){
+    public void stop() {
         super.stop();
         try {
             producer.flush();
@@ -64,10 +65,10 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     @Override
     public void append(E eventObject) {
         //init Event Object
-        if(!(eventObject instanceof LoggingEvent)){
+        if (!(eventObject instanceof LoggingEvent)) {
             return;
         }
-        LoggingEvent event = (LoggingEvent)eventObject;
+        LoggingEvent event = (LoggingEvent) eventObject;
 
         List<LogItem> logItems = new ArrayList<LogItem>();
         LogItem item = new LogItem();
@@ -78,12 +79,12 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         item.PushBack("thread", event.getThreadName());
 
         StackTraceElement[] caller = event.getCallerData();
-        if(caller!=null || caller.length>0){
+        if (caller != null || caller.length > 0) {
             item.PushBack("location", caller[0].toString());
         }
 
         item.PushBack("message", event.getFormattedMessage());
-        if(event.getThrowableProxy()!=null){
+        if (event.getThrowableProxy() != null) {
             item.PushBack("exception", fullDump(event.getThrowableProxy().getStackTraceElementProxyArray()));
         }
 
@@ -229,6 +230,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     public void setShardHashUpdateIntervalInMS(int shardHashUpdateIntervalInMS) {
         producerConfig.shardHashUpdateIntervalInMS = shardHashUpdateIntervalInMS;
     }
+
     public int getRetryTimes() {
         return producerConfig.retryTimes;
     }
