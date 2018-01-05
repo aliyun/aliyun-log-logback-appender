@@ -1,6 +1,5 @@
 package com.aliyun.openservices.log.logback;
 
-import com.aliyun.openservices.log.producer.ProducerConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -15,32 +14,26 @@ public class TestAppender {
     }
 
     @Test
-    public void testLog() throws Exception{
+    public void testLog() throws Exception {
         log.warn("hello world! ~~~");
+        System.out.println("done");
+    }
+
+    @Test
+    public void testException() throws Exception {
         try {
-            ProducerConfig config = new ProducerConfig();
-            Thread.sleep(2 * config.packageTimeoutInMS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+            double a = 1 / 0;
+        } catch (Exception e) {
+            log.warn("system error. " + e.getMessage(), e);
         }
         System.out.println("done");
     }
 
     @Test
-    public void testException() throws Exception{
-        try{
-            double a = 1/0;
-        }catch (Exception e){
-            log.warn("system error. "+e.getMessage(), e);
-        }
-
-
-        try {
-            ProducerConfig config = new ProducerConfig();
-            Thread.sleep(2 * config.packageTimeoutInMS);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void testMultipleLogs() throws Exception {
+        log.warn("hello world1! ~~~");
+        log.warn("hello world2! ~~~");
+        log.warn("hello world3! ~~~");
         System.out.println("done");
     }
 }

@@ -11,20 +11,23 @@
 
 ```
 <dependency>
-	<groupId>com.google.protobuf</groupId>
+    <groupId>com.google.protobuf</groupId>
     <artifactId>protobuf-java</artifactId>
     <version>2.5.0</version>
 </dependency>
 <dependency>
-	<groupId>com.aliyun.openservices</groupId>
-  	<artifactId>aliyun-log-logback-appender</artifactId>
-	<version>0.1.1</version>
+    <groupId>com.aliyun.openservices</groupId>
+    <artifactId>aliyun-log-logback-appender</artifactId>
+    <version>0.1.1</version>
 </dependency>
 ```
 
 2. **修改配置文件**
 ```
-  <appender name="aliyun" class="com.aliyun.openservices.LoghubAppender">
+  <!--为了防止进程退出时，内存中的数据丢失，请加上此选项-->
+  <shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>
+
+  <appender name="aliyun" class="com.aliyun.openservices.log.logback.LoghubAppender">
     <!--必选项-->
     <!-- 账号及网络配置 -->
     <endpoint></endpoint>
@@ -35,6 +38,9 @@
     <projectName></projectName>
     <logstore></logstore>
     <!--必选项 (end)-->
+
+    <!-- 可选项 -->
+    <topic>xxx</topic>
     
     <!-- 可选项 详见 '参数说明'-->
     <packageTimeoutInMS>3000</packageTimeoutInMS>

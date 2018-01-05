@@ -24,3 +24,8 @@ hs_err_pid*
 *.iml
 
 .idea/*
+
+target/
+
+# Local test files
+logback-test-wubo.xml
