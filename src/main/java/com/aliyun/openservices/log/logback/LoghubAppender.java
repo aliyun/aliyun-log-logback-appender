@@ -111,7 +111,8 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("exception", fullDump(event.getThrowableProxy().getStackTraceElementProxyArray()));
         }
 
-        producer.send(projectConfig.projectName, logstore, topic, null, logItems);
+        producer.send(projectConfig.projectName, logstore, topic, null, logItems, new LoghubAppenderCallback<E>(this,
+                projectConfig.projectName, logstore, topic, null, logItems));
     }
 
     public String getTimeFormat() {
