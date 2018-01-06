@@ -49,7 +49,6 @@
     <memPoolSizeInByte>104857600</memPoolSizeInByte>
     <retryTimes>3</retryTimes>
     <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
-    <shardHashUpdateIntervalInMS>600000</shardHashUpdateIntervalInMS>    
   </appender>
 ```
 
