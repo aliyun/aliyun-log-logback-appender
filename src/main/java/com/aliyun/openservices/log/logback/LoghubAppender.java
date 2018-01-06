@@ -21,7 +21,6 @@ import java.util.*;
  * public int memPoolSizeInByte = 104857600; 指定单个Producer实例可以使用的内存的上限,单位字节
  * public int retryTimes = 3; 指定发送失败时重试的次数
  * public int maxIOThreadSizeInPool = 8; 指定I/O线程池最大线程数量，主要用于发送数据到日志服务
- * public int shardHashUpdateIntervalInMS = 600000;
  *
  * @author 铁生
  */
@@ -102,7 +101,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         item.PushBack("thread", event.getThreadName());
 
         StackTraceElement[] caller = event.getCallerData();
-        if (caller != null || caller.length > 0) {
+        if (caller != null && caller.length > 0) {
             item.PushBack("location", caller[0].toString());
         }
 
@@ -245,14 +244,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setMaxIOThreadSizeInPool(int ioThreadsCount) {
         producerConfig.maxIOThreadSizeInPool = ioThreadsCount;
-    }
-
-    public int getShardHashUpdateIntervalInMS() {
-        return producerConfig.shardHashUpdateIntervalInMS;
-    }
-
-    public void setShardHashUpdateIntervalInMS(int shardHashUpdateIntervalInMS) {
-        producerConfig.shardHashUpdateIntervalInMS = shardHashUpdateIntervalInMS;
     }
 
     public int getRetryTimes() {
