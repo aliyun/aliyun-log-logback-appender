@@ -1,3 +1,8 @@
+# Logback Appender
+
+
+
+
 # 版本支持
 * logback 1.2.3
 * log-loghub-producer 0.1.8
@@ -94,3 +99,12 @@ retryTimes = 3
 topic = [your topic]
 ```
 参阅：https://help.aliyun.com/document_detail/43758.html
+
+### 4. **使用实例**
+项目中提供了一个名为`com.aliyun.openservices.log.logback.LogbackAppenderExample`的实例，它会加载resources目录下的`logback.xml`文件进行logback配置。
+
+**logback.xml说明**
++ 配置了三个appender：loghubAppender1、loghubAppender2、STDOUT。
++ loghubAppender1：将日志输出到project=test-proj，logstore=store1。输出WARN、ERROR级别的日志。
++ loghubAppender2：将日志输出到project=test-proj，logstore=store2。只输出INFO级别的日志。
++ STDOUT：将日志输出到控制台。由于没有对日志级别进行过滤，会输出root中配置的日志级及以上的所有日志。
