@@ -1,18 +1,39 @@
 # Logback Appender
 
+## Aliyun Log Logback Appender
+Logback是由log4j创始人设计的又一个开源日志组件。 通过使用Logback，您可以控制日志信息输送的目的地是控制台、文件、GUI 组件、甚至是套接口服务器、NT 的事件记录器、UNIX Syslog 守护进程等；您也可以控制每一条日志的输出格式；通过定义每一条日志信息的级别，您能够更加细致地控制日志的生成过程。最令人感兴趣的就是，这些可以通过一个配置文件来灵活地进行配置，而不需要修改应用的代码。
+
+通过Aliyun Log Logback Appender，您可以控制日志的输出目的地为阿里云日志服务。需要注意的是，Aliyun Log Logback Appender不支持设置日志的输出格式，写到日志服务中的日志的样式如下：
+```
+level: ERROR
+location: com.aliyun.openservices.log.logback.example.LogbackAppenderExample.main(LogbackAppenderExample.java:18)
+message: error log
+thread: main
+time: 2018-01-02T03:15+0000
+```
+其中：
++ level 是日志级别。
++ location 是日志打印语句的代码位置。
++ message 是日志内容。
++ thread 是线程名称。
++ time 是日志打印时间。
 
 
+## 功能优势
++ 客户端日志不落盘，即数据生产后直接通过网络发往服务端。
++ 对于已经使用Logback记录日志的应用，只需要简单修改配置文件就可以将日志传输到日志服务。
++ 异步高吞吐，Aliyun Log Logback Appender 会将用户的日志merge之后异步发送，提高网络I/O效率。
 
-# 版本支持
+
+## 版本支持
 * logback 1.2.3
 * log-loghub-producer 0.1.8
 * protobuf-java 2.5.0
 
 
+## 配置步骤
 
-# 配置步骤
-
-### 1. **maven 工程中引入依赖**
+### 1. maven 工程中引入依赖
 
 ```
 <dependency>
@@ -27,7 +48,7 @@
 </dependency>
 ```
 
-### 2. **修改配置文件**
+### 2. 修改配置文件
 
 以xml型配置文件`logback.xml`为例（不存在则在项目根目录创建），配置Loghub相关的appender与 Logger，例如：
 ```
@@ -66,8 +87,7 @@
 + 为了防止进程退出时，LoghubAppender缓存在内存中的少量数据丢失，请记得加上`DelayingShutdownHook`标签。
 + LoghubAppender在运行过程中产生的异常会被捕获并放入logback的`BasicStatusManager`类中，您可以通过配置`OnConsoleStatusListener`或其他方式查看出错信息。参阅：https://logback.qos.ch/access.html
 
-
-### 3. **参数说明**
+## 参数说明
 
 Loghub Logback Appender 可供配置的属性（参数）如下，其中注释为必选参数的是必须填写的，可选参数在不填写的情况下，使用默认值。
 
@@ -100,10 +120,10 @@ topic = [your topic]
 ```
 参阅：https://help.aliyun.com/document_detail/43758.html
 
-### 4. **使用实例**
+## 使用实例
 项目中提供了一个名为`com.aliyun.openservices.log.logback.LogbackAppenderExample`的实例，它会加载resources目录下的`logback.xml`文件进行logback配置。
 
-**logback.xml说明**
+**logback.xml样例说明**
 + 配置了三个appender：loghubAppender1、loghubAppender2、STDOUT。
 + loghubAppender1：将日志输出到project=test-proj，logstore=store1。输出WARN、ERROR级别的日志。
 + loghubAppender2：将日志输出到project=test-proj，logstore=store2。只输出INFO级别的日志。
