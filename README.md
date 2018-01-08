@@ -128,3 +128,7 @@ topic = [your topic]
 + loghubAppender1：将日志输出到project=test-proj，logstore=store1。输出WARN、ERROR级别的日志。
 + loghubAppender2：将日志输出到project=test-proj，logstore=store2。只输出INFO级别的日志。
 + STDOUT：将日志输出到控制台。由于没有对日志级别进行过滤，会输出root中配置的日志级及以上的所有日志。
+
+[LogbackAppenderExample.java](/src/main/java/com/aliyun/openservices/log/logback/example/LogbackAppenderExample.java)
+
+[logback.xml](/src/main/resources/logback.xml)
