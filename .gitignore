@@ -30,3 +30,7 @@ target/
 # Local test files
 logback-test-wubo.xml
 logback-wubo.xml
+
+# release files
+release.properties
+pom.xml.releaseBackup
