@@ -30,6 +30,7 @@ target/
 # Local test files
 logback-test-wubo.xml
 logback-wubo.xml
+LogbackAppenderPackageIDTest.java
 
 # release files
 release.properties
