@@ -1,39 +1,56 @@
 package com.aliyun.openservices.log.logback;
 
-import org.junit.Before;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.status.Status;
+import ch.qos.logback.core.status.StatusManager;
+import com.aliyun.openservices.log.producer.ProducerConfig;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static org.junit.Assert.assertNotEquals;
+
+import java.util.List;
+
 public class TestAppender {
-    Logger log = LoggerFactory.getLogger(TestAppender.class);
 
-    @Before
-    public void setUp() throws Exception {
+    private static final Logger LOGGER = LoggerFactory.getLogger(TestAppender.class);
 
+    private static void sleep() {
+        ProducerConfig producerConfig = new ProducerConfig();
+        try {
+            Thread.sleep(2 * producerConfig.packageTimeoutInMS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @AfterClass
+    public static void checkStatusList() {
+        sleep();
+        LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+        StatusManager statusManager = lc.getStatusManager();
+        List<Status> statusList = statusManager.getCopyOfStatusList();
+        for (Status status : statusList) {
+            int level = status.getLevel();
+            assertNotEquals(status.getMessage(), Status.ERROR, level);
+            assertNotEquals(status.getMessage(), Status.WARN, level);
+        }
     }
 
     @Test
-    public void testLog() throws Exception {
-        log.warn("hello world! ~~~");
-        System.out.println("done");
+    public void testSingleLog() throws Exception {
+        LOGGER.warn("testSingleLog");
     }
+
 
     @Test
     public void testException() throws Exception {
         try {
             double a = 1 / 0;
         } catch (Exception e) {
-            log.warn("system error. " + e.getMessage(), e);
+            LOGGER.warn("testException" + e.getMessage(), e);
         }
-        System.out.println("done");
-    }
-
-    @Test
-    public void testMultipleLogs() throws Exception {
-        log.warn("hello world1! ~~~");
-        log.warn("hello world2! ~~~");
-        log.warn("hello world3! ~~~");
-        System.out.println("done");
     }
 }
