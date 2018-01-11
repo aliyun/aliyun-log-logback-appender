@@ -40,17 +40,13 @@ public class TestAppender {
     }
 
     @Test
-    public void testSingleLog() throws Exception {
-        LOGGER.warn("testSingleLog");
+    public void testLogCommonMessage() {
+        LOGGER.warn("This is a test common message logged by logback.");
     }
 
-
     @Test
-    public void testException() throws Exception {
-        try {
-            double a = 1 / 0;
-        } catch (Exception e) {
-            LOGGER.warn("testException" + e.getMessage(), e);
-        }
+    public void testLogThrowable() {
+        LOGGER.error("This is a test error message logged by logback.",
+                new UnsupportedOperationException("Logback UnsupportedOperationException"));
     }
 }
