@@ -111,7 +111,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         if (iThrowableProxy != null) {
             message += CoreConstants.LINE_SEPARATOR;
             message += getExceptionInfo(iThrowableProxy);
-            message += CoreConstants.LINE_SEPARATOR;
             message += fullDump(event.getThrowableProxy().getStackTraceElementProxyArray());
         }
         item.PushBack("message", message);
@@ -139,10 +138,10 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     private String fullDump(StackTraceElementProxy[] stackTraceElementProxyArray) {
         StringBuilder builder = new StringBuilder();
         for (StackTraceElementProxy step : stackTraceElementProxyArray) {
+            builder.append(CoreConstants.LINE_SEPARATOR);
             String string = step.toString();
             builder.append(CoreConstants.TAB).append(string);
             ThrowableProxyUtil.subjoinPackagingData(builder, step);
-            builder.append(CoreConstants.LINE_SEPARATOR);
         }
         return builder.toString();
     }
