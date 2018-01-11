@@ -1,5 +1,6 @@
 package com.aliyun.openservices.log.logback;
 
+import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
@@ -105,10 +106,15 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("location", caller[0].toString());
         }
 
-        item.PushBack("message", event.getFormattedMessage());
-        if (event.getThrowableProxy() != null) {
-            item.PushBack("exception", fullDump(event.getThrowableProxy().getStackTraceElementProxyArray()));
+        String message = event.getFormattedMessage();
+        IThrowableProxy iThrowableProxy = event.getThrowableProxy();
+        if (iThrowableProxy != null) {
+            message += CoreConstants.LINE_SEPARATOR;
+            message += getExceptionInfo(iThrowableProxy);
+            message += CoreConstants.LINE_SEPARATOR;
+            message += fullDump(event.getThrowableProxy().getStackTraceElementProxyArray());
         }
+        item.PushBack("message", message);
 
         producer.send(projectConfig.projectName, logstore, topic, null, logItems, new LoghubAppenderCallback<E>(this,
                 projectConfig.projectName, logstore, topic, null, logItems));
@@ -122,6 +128,12 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         this.timeFormat = timeFormat;
         formatter = new SimpleDateFormat(timeFormat);
         formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
+    }
+
+    private String getExceptionInfo(IThrowableProxy iThrowableProxy) {
+        String s = iThrowableProxy.getClassName();
+        String message = iThrowableProxy.getMessage();
+        return (message != null) ? (s + ": " + message) : s;
     }
 
     private String fullDump(StackTraceElementProxy[] stackTraceElementProxyArray) {
@@ -254,5 +266,4 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         producerConfig.retryTimes = retryTimes;
     }
     // **** ==- ProducerConfig (end) -== **********************
-
 }
