@@ -73,7 +73,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
         super.stop();
         producer.flush();
-        Thread.sleep(2 * producerConfig.packageTimeoutInMS);
         producer.close();
     }
 
