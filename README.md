@@ -30,7 +30,7 @@ time: 2018-01-02T03:15+0000
 
 ## 版本支持
 * logback 1.2.3
-* log-loghub-producer 0.1.8
+* log-loghub-producer 0.1.10
 * protobuf-java 2.5.0
 
 
