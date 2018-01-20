@@ -135,3 +135,8 @@ topic = [your topic]
 [LogbackAppenderExample.java](/src/main/java/com/aliyun/openservices/log/logback/example/LogbackAppenderExample.java)
 
 [logback.xml](/src/main/resources/logback.xml)
+
+## 贡献者
+[@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
+
+感谢 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 的杰出工作。
