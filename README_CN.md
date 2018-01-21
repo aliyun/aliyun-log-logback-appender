@@ -123,7 +123,7 @@ retryTimes = 3
 #指定日志主题
 topic = [your topic]
 ```
-参阅：https://help.aliyun.com/document_detail/43758.html
+参阅：https://github.com/aliyun/aliyun-log-producer-java
 
 ## 使用实例
 项目中提供了一个名为`com.aliyun.openservices.log.logback.LogbackAppenderExample`的实例，它会加载resources目录下的`logback.xml`文件进行logback配置。
