@@ -137,7 +137,7 @@ topic = [your topic]
 
 [LogbackAppenderExample.java](/src/main/java/com/aliyun/openservices/log/logback/example/LogbackAppenderExample.java)
 
-[logback.xml](/src/main/resources/logback.xml)
+[logback-example.xml](/src/main/resources/logback-example.xml)
 
 ## 错误诊断
 
