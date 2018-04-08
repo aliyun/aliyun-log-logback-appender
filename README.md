@@ -112,8 +112,8 @@ accessKey = [your accesskey]
 packageTimeoutInMS = 3000
 # Specify the maximum log count per package, the upper limit is 4096, optional
 logsCountPerPackage = 4096
-# Specify the maximum cache size per package, the upper limit is 5MB, in bytes, optional
-logsBytesPerPackage = 5242880
+# Specify the maximum cache size per package, the upper limit is 3MB, in bytes, optional
+logsBytesPerPackage = 3145728
 # The upper limit of the memory that can be used by appender, in bytes, default is 100MB, optional
 memPoolSizeInByte = 1048576000
 # Specify the I/O thread pool's maximum pool size, the main function of the I/O thread pool is to send data, default is 8, optional

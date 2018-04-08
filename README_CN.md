@@ -112,8 +112,8 @@ accessKey = [your accesskey]
 packageTimeoutInMS = 3000
 #每个缓存的日志包中包含日志数量的最大值，不能超过 4096，可选参数
 logsCountPerPackage = 4096
-#每个缓存的日志包的大小的上限，不能超过 5MB，单位是字节，可选参数
-logsBytesPerPackage = 5242880
+#每个缓存的日志包的大小的上限，不能超过 3MB，单位是字节，可选参数
+logsBytesPerPackage = 3145728
 #Appender 实例可以使用的内存的上限，单位是字节，默认是 100MB，可选参数
 memPoolSizeInByte = 1048576000
 #指定I/O线程池最大线程数量，主要用于发送数据到日志服务，默认是8，可选参数
