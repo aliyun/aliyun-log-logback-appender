@@ -50,7 +50,7 @@ time: 2018-01-02T03:15+0000
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.6</version>
+    <version>0.1.7</version>
 </dependency>
 ```
 
@@ -145,6 +145,12 @@ topic = [your topic]
 * 检查您项目中引入的 protobuf-java，aliyun-log-logback-appender 这两个 jar 包的版本是否和文档中`maven 工程中引入依赖`部分列出的 jar 包版本一致。
 * 通过观察控制台的输出来诊断您的问题。Aliyun Log Logback Appender 会将 appender 运行过程中产生的异常写入 `ch.qos.logback.core.BasicStatusManager` 中。您可以通过配置 statusListener 来获取 BasicStatusManager 中的数据。例如，`<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>` 会将 BasicStatusManager 中的数据输出到控制台。
 * 请检查您的 `logback.xml` 中是否包含选项 `<shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>`。数据会定期异步地发往服务端，加上此选项可以保证您的程序在正常退出时，内存中缓存的数据不丢失。
+
+## 常见问题
+
+**Q**：日志中为何没有 time 字段？
+
+**A**：0.1.6 以及之前的版本的 LogItem 没有包含 time 字段，请升级至最新版本。
 
 ## 贡献者
 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
