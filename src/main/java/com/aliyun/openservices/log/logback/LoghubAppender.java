@@ -51,7 +51,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     private void doStart() {
         formatter = new SimpleDateFormat(timeFormat);
         formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
-
+        producerConfig.userAgent = "logback";
         producer = new LogProducer(producerConfig);
         producer.setProjectConfig(projectConfig);
 
