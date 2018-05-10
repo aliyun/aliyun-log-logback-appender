@@ -16,6 +16,7 @@
 
         <!-- 可选项 -->
         <topic>topic1</topic>
+        <source>source1</source>
 
         <!-- 可选项 详见 '参数说明'-->
         <packageTimeoutInMS>3000</packageTimeoutInMS>
@@ -44,6 +45,7 @@
 
         <!-- 可选项 -->
         <topic>topic2</topic>
+        <source>source2</source>
 
         <!-- 可选项 详见 '参数说明'-->
         <packageTimeoutInMS>3000</packageTimeoutInMS>
