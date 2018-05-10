@@ -34,6 +34,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     private String logstore; //
     private String topic = ""; //
+    private String source = ""; //
 
     private String timeZone = "UTC";
     private String timeFormat = "yyyy-MM-dd'T'HH:mmZ";
@@ -114,8 +115,8 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
         item.PushBack("message", message);
 
-        producer.send(projectConfig.projectName, logstore, topic, null, logItems, new LoghubAppenderCallback<E>(this,
-                projectConfig.projectName, logstore, topic, null, logItems));
+        producer.send(projectConfig.projectName, logstore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
+                projectConfig.projectName, logstore, topic, source, logItems));
     }
 
     public String getTimeFormat() {
@@ -159,6 +160,14 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setTopic(String topic) {
         this.topic = topic;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public void setSource(String source) {
+        this.source = source;
     }
 
     public String getTimeZone() {
