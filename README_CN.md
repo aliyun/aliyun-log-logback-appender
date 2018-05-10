@@ -24,8 +24,8 @@ __topic__: yyy
 + message 日志内容。
 + thread 线程名称。
 + time 日志打印时间。
-+ __source__ 日志来源，用户可在配置文件中指定。
-+ __topic__ 日志主题，用户可在配置文件中指定。
++ \_\_source\_\_ 日志来源，用户可在配置文件中指定。
++ \_\_topic\_\_ 日志主题，用户可在配置文件中指定。
 
 
 ## 功能优势
@@ -54,7 +54,7 @@ __topic__: yyy
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.8</version>
+    <version>0.1.9</version>
 </dependency>
 ```
 
