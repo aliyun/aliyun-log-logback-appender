@@ -152,6 +152,10 @@ topic = [your topic]
 
 **A**：0.1.6 以及之前的版本的 LogItem 没有包含 time 字段，请升级至最新版本。
 
+**Q**：用户可以自定义 source 字段的取值吗？
+
+**A**：目前不支持。source 字段会被设置成应用程序所在宿主机的 IP。
+
 ## 贡献者
 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
 
