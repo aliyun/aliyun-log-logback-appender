@@ -16,6 +16,8 @@ location: com.aliyun.openservices.log.logback.example.LogbackAppenderExample.mai
 message: error log
 thread: main
 time: 2018-01-02T03:15+0000
+__source__: xxx
+__topic__: yyy
 ```
 Field Specifications:
 + `level` stands for log level
@@ -23,7 +25,8 @@ Field Specifications:
 + `message` is the content of the log
 + `thread` stands for thread name
 + `time` is the log's generation time
-
++ `__source__` is the log's source, you can specify its value in conf file
++ `__topic__` is the log's topic, you can specify its value in conf file
 
 ## Advantage
 + `Disk Free`: the generation data will be send to AliCloud Log Service in real time through network.
@@ -76,6 +79,7 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
 
     <!-- Optional parameters -->
     <topic>your topic</topic>
+    <source>your source</source>
 
     <!-- Optional parameters -->
     <packageTimeoutInMS>3000</packageTimeoutInMS>
@@ -123,6 +127,9 @@ retryTimes = 3
 
 # Specify the topic of your log
 topic = [your topic]
+
+# Specify the source of your log
+source = [your source]
 ```
 
 ## Sample Code

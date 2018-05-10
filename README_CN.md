@@ -15,13 +15,17 @@ location: com.aliyun.openservices.log.logback.example.LogbackAppenderExample.mai
 message: error log
 thread: main
 time: 2018-01-02T03:15+0000
+__source__: xxx
+__topic__: yyy
 ```
 其中：
-+ level 是日志级别。
-+ location 是日志打印语句的代码位置。
-+ message 是日志内容。
-+ thread 是线程名称。
-+ time 是日志打印时间。
++ level 日志级别。
++ location 日志打印语句的代码位置。
++ message 日志内容。
++ thread 线程名称。
++ time 日志打印时间。
++ __source__ 日志来源，用户可在配置文件中指定。
++ __topic__ 日志主题，用户可在配置文件中指定。
 
 
 ## 功能优势
@@ -75,6 +79,7 @@ time: 2018-01-02T03:15+0000
 
     <!-- 可选项 -->
     <topic>your topic</topic>
+    <source>your source</source>
 
     <!-- 可选项 详见 '参数说明'-->
     <packageTimeoutInMS>3000</packageTimeoutInMS>
@@ -123,6 +128,9 @@ retryTimes = 3
 
 #指定日志主题
 topic = [your topic]
+
+#指的日志来源
+source = [your source]
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 
@@ -154,7 +162,7 @@ topic = [your topic]
 
 **Q**：用户可以自定义 source 字段的取值吗？
 
-**A**：目前不支持。source 字段会被设置成应用程序所在宿主机的 IP。
+**A**：0.1.8 以及之前的版本不支持，在这些版本中 source 字段会被设置成应用程序所在宿主机的 IP。在最新的版本中，您可以参考上面的配置文件指定 source 的取值。
 
 ## 贡献者
 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
