@@ -168,6 +168,14 @@ source = [your source]
 
 **A**：appender 底层使用 `aliyun-log-producer-java` 发送数据，producer 会尝试发送数据 retryTimes 次，如果超过 retryTimes 次仍没有发送成功，会将错误信息输出，并丢弃该条日志。关于如何查看错误输出，可以参考错误诊断部分。
 
+**Q**：如何关闭某些类输出的日志？
+
+**A**：通过在 logback.xml 文件中添加 `<logger name="packname" level="OFF"/>` 可屏蔽相应包下日志的输出。packname 一般是包名，但也可能是其他的名字，这个取决于java代码中写的名字。
+例如，当您在 logback.xml 文件中添加如下内容会屏蔽 package 名为 `com.aliyun.openservices.log.producer.inner` 下所有类的日志输出。
+```
+<logger name="com.aliyun.openservices.log.producer.inner" level="OFF"/>
+```
+
 ## 贡献者
 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
 
