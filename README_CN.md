@@ -170,7 +170,7 @@ source = [your source]
 
 **Q**：如何关闭某些类输出的日志？
 
-**A**：通过在 logback.xml 文件中添加 `<logger name="packname" level="OFF"/>` 可屏蔽相应包下日志的输出。packname 一般是包名，但也可能是其他的名字，这个取决于java代码中写的名字。
+**A**：通过在 logback.xml 文件中添加 `<logger name="packname" level="OFF"/>` 可屏蔽相应包下日志的输出。
 例如，当您在 logback.xml 文件中添加如下内容会屏蔽 package 名为 `com.aliyun.openservices.log.producer.inner` 下所有类的日志输出。
 ```
 <logger name="com.aliyun.openservices.log.producer.inner" level="OFF"/>
