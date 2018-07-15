@@ -21,7 +21,7 @@ __topic__: yyy
 其中：
 + level 日志级别。
 + location 日志打印语句的代码位置。
-+ message 日志内容。
++ message 日志内容（支持通过在 encoder 中设置 pattern 来自定义 message 格式，详见**常见问题**部分）。
 + thread 线程名称。
 + time 日志打印时间。
 + \_\_source\_\_ 日志来源，用户可在配置文件中指定。
