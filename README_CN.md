@@ -156,6 +156,19 @@ source = [your source]
 
 ## 常见问题
 
+**Q**：是否支持自定义 message 格式？
+
+**A**：0.1.11 及以上版本支持。您可以通过在 encoder 中设置 pattern 来自定义 message 格式，例如：
+```
+<encoder>
+    <pattern>%d %-5level [%thread] %logger{0}: %msg</pattern>
+</encoder>
+```
+message 输出样例：
+```
+message:  2018-07-15 21:12:29,682 INFO [main] TestAppender: info message.
+```
+
 **Q**：日志中为何没有 time 字段？
 
 **A**：0.1.6 以及之前的版本的 LogItem 没有包含 time 字段，请升级至最新版本。
