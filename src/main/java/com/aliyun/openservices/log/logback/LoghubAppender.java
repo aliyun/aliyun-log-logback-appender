@@ -277,6 +277,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     }
     // **** ==- ProducerConfig (end) -== **********************
 
+    public Encoder<E> getEncoder() {
+        return encoder;
+    }
 
     public void setEncoder(Encoder<E> encoder) {
         this.encoder = encoder;
