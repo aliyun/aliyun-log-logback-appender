@@ -9,7 +9,7 @@
 
 Logback is intended as a successor to the popular log4j project. You can control the destination of the log through logback. It can be console, file, GUI components, socket, NT event log, syslog. You can control the output format for each log as well. You can control the generation process of the log through log level. The most interesting thing is you can complete the above things through a configuration file and without any code modification.
 
-You can set the destination of your log to AliCloud Log Service through `Aliyun Log Logback Appender`. But it is important to note that `Aliyun Log Logback Appender` doesn't support cofigure log's output format. The format of the log in AliCloud Log Service is as follows:
+You can set the destination of your log to AliCloud Log Service through `Aliyun Log Logback Appender`, The format of the log in AliCloud Log Service is as follows:
 ```
 level: ERROR
 location: com.aliyun.openservices.log.logback.example.LogbackAppenderExample.main(LogbackAppenderExample.java:18)
@@ -37,7 +37,7 @@ Field Specifications:
 
 ## Supported Version
 * logback 1.2.3
-* log-loghub-producer 0.1.10
+* log-loghub-producer 0.1.13
 * protobuf-java 2.5.0
 
 
@@ -54,7 +54,7 @@ Field Specifications:
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.11</version>
 </dependency>
 ```
 

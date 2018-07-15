@@ -8,7 +8,7 @@
 ## Aliyun Log Logback Appender
 Logback是由log4j创始人设计的又一个开源日志组件。通过使用Logback，您可以控制日志信息输送的目的地是控制台、文件、GUI 组件、甚至是套接口服务器、NT 的事件记录器、UNIX Syslog 守护进程等；您也可以控制每一条日志的输出格式；通过定义每一条日志信息的级别，您能够更加细致地控制日志的生成过程。最令人感兴趣的就是，这些可以通过一个配置文件来灵活地进行配置，而不需要修改应用的代码。
 
-通过Aliyun Log Logback Appender，您可以控制日志的输出目的地为阿里云日志服务。需要注意的是，Aliyun Log Logback Appender不支持设置日志的输出格式，写到日志服务中的日志的样式如下：
+通过Aliyun Log Logback Appender，您可以控制日志的输出目的地为阿里云日志服务，写到日志服务中的日志的样式如下：
 ```
 level: ERROR
 location: com.aliyun.openservices.log.logback.example.LogbackAppenderExample.main(LogbackAppenderExample.java:18)
@@ -37,7 +37,7 @@ __topic__: yyy
 
 ## 版本支持
 * logback 1.2.3
-* log-loghub-producer 0.1.10
+* log-loghub-producer 0.1.13
 * protobuf-java 2.5.0
 
 
@@ -54,7 +54,7 @@ __topic__: yyy
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.10</version>
+    <version>0.1.11</version>
 </dependency>
 ```
 
