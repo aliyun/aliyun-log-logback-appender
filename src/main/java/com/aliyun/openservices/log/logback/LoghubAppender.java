@@ -6,6 +6,7 @@ import ch.qos.logback.classic.spi.StackTraceElementProxy;
 import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
+import ch.qos.logback.core.encoder.Encoder;
 import com.aliyun.openservices.log.common.LogItem;
 import com.aliyun.openservices.log.producer.LogProducer;
 import com.aliyun.openservices.log.producer.ProducerConfig;
@@ -26,6 +27,8 @@ import java.util.*;
  * @author 铁生
  */
 public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
+
+    private Encoder<E> encoder;
 
     private ProducerConfig producerConfig = new ProducerConfig();
     private ProjectConfig projectConfig = new ProjectConfig();
@@ -106,7 +109,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("location", caller[0].toString());
         }
 
-        String message = event.getFormattedMessage();
+        String message = this.encoder != null ? new String(this.encoder.encode(eventObject)) : event.getFormattedMessage();
         IThrowableProxy iThrowableProxy = event.getThrowableProxy();
         if (iThrowableProxy != null) {
             message += CoreConstants.LINE_SEPARATOR;
@@ -273,4 +276,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         producerConfig.retryTimes = retryTimes;
     }
     // **** ==- ProducerConfig (end) -== **********************
+
+
+    public void setEncoder(Encoder<E> encoder) {
+        this.encoder = encoder;
+    }
 }
