@@ -14,8 +14,10 @@ You can set the destination of your log to AliCloud Log Service through `Aliyun 
 level: ERROR
 location: com.aliyun.openservices.log.logback.example.LogbackAppenderExample.main(LogbackAppenderExample.java:18)
 message: error log
+throwable: java.lang.RuntimeException: xxx
 thread: main
 time: 2018-01-02T03:15+0000
+log: 2018-01-02 11:15:29,682 ERROR [main] com.aliyun.openservices.log.logback.example.LogbackAppenderExample: error log
 __source__: xxx
 __topic__: yyy
 ```
@@ -23,8 +25,10 @@ Field Specifications:
 + `level` stands for log level
 + `location` is logs's output position
 + `message` is the content of the log
++ `throwable` is exception of the log (this field will appear only if the exception is recorded)
 + `thread` stands for thread name
 + `time` is the log's generation time
++ `log` is custom log format(this field will appear only if you configure the encoder)
 + `__source__` is the log's source, you can specify its value in conf file
 + `__topic__` is the log's topic, you can specify its value in conf file
 
@@ -130,6 +134,12 @@ topic = [your topic]
 
 # Specify the source of your log
 source = [your source]
+
+# Specify time format of the field time, default is yyyy-MM-dd'T'HH:mmZ, optional
+timeFormat = yyyy-MM-dd'T'HH:mmZ
+
+# Specify timezone of the field time, default is UTC, optional
+timeZone = UTC
 ```
 
 ## Sample Code
