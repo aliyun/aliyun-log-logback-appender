@@ -92,6 +92,16 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
     <memPoolSizeInByte>104857600</memPoolSizeInByte>
     <retryTimes>3</retryTimes>
     <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
+    
+    <!-- Optional parameters -->
+    <encoder>
+        <pattern>%d %-5level [%thread] %logger{0}: %msg</pattern>
+    </encoder>
+    
+    <!--  Optional parameters -->
+    <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
+    <!--  Optional parameters -->
+    <timeZone>UTC</timeZone>
   </appender>
 
   <!-- This listener will print the status in StatusManager to console
