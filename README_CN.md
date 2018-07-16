@@ -26,7 +26,7 @@ __topic__: yyy
 + message 日志内容。
 + throwable 日志异常信息（只有记录了异常信息，这个字段才会出现）。
 + thread 线程名称。
-+ time 日志打印时间（可以通过 timeFormat 或 timeZone 配置 time 字段的格式）。
++ time 日志打印时间（可以通过 timeFormat 或 timeZone 配置 time 字段呈现的格式和时区）。
 + log 自定义日志格式（只有设置了 encoder，这个字段才会出现）。
 + \_\_source\_\_ 日志来源，用户可在配置文件中指定。
 + \_\_topic\_\_ 日志主题，用户可在配置文件中指定。
@@ -92,6 +92,16 @@ __topic__: yyy
     <memPoolSizeInByte>104857600</memPoolSizeInByte>
     <retryTimes>3</retryTimes>
     <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
+    
+    <!-- 可选项 通过配置 encoder 的 pattern 自定义 log 的格式 -->
+    <encoder>
+        <pattern>%d %-5level [%thread] %logger{0}: %msg</pattern>
+    </encoder>
+    
+    <!-- 可选项 设置 time 字段呈现的格式 -->
+    <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
+    <!-- 可选项 设置 time 字段呈现的时区 -->
+    <timeZone>UTC</timeZone>
   </appender>
 
   <!-- 可用来获取StatusManager中的状态
