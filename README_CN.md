@@ -13,17 +13,21 @@ Logback是由log4j创始人设计的又一个开源日志组件。通过使用Lo
 level: ERROR
 location: com.aliyun.openservices.log.logback.example.LogbackAppenderExample.main(LogbackAppenderExample.java:18)
 message: error log
+throwable: java.lang.RuntimeException: xxx
 thread: main
 time: 2018-01-02T03:15+0000
+log: 2018-01-02 11:15:29,682 ERROR [main] com.aliyun.openservices.log.logback.example.LogbackAppenderExample: error log
 __source__: xxx
 __topic__: yyy
 ```
 其中：
 + level 日志级别。
 + location 日志打印语句的代码位置。
-+ message 日志内容（0.1.11 及以上版本支持通过在 encoder 中设置 pattern 来自定义 message 格式，详见**常见问题**部分）。
++ message 日志内容。
++ throwable 日志异常信息（只有记录了异常信息，这个字段才会出现）。
 + thread 线程名称。
 + time 日志打印时间。
++ log 自定义日志格式（只有设置了 encoder，这个字段才会出现）。
 + \_\_source\_\_ 日志来源，用户可在配置文件中指定。
 + \_\_topic\_\_ 日志主题，用户可在配置文件中指定。
 
@@ -126,11 +130,17 @@ maxIOThreadSizeInPool = 8
 #指定发送失败时重试的次数，如果超过该值，会把失败信息记录到logback的StatusManager里，默认是3，可选参数
 retryTimes = 3
 
-#指定日志主题
+#指定日志主题，可选参数
 topic = [your topic]
 
-#指的日志来源
+#指的日志来源，可选参数
 source = [your source]
+
+#输出到日志服务的时间的格式，默认是 yyyy-MM-dd'T'HH:mmZ，可选参数
+timeFormat = yyyy-MM-dd'T'HH:mmZ
+
+#输出到日志服务的时间的时区，默认是 UTC，可选参数
+timeZone = UTC
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 
@@ -156,17 +166,17 @@ source = [your source]
 
 ## 常见问题
 
-**Q**：是否支持自定义 message 格式？
+**Q**：是否支持自定义 log 格式？
 
-**A**：0.1.11 及以上版本支持。您可以通过在 encoder 中设置 pattern 来自定义 message 格式，例如：
+**A**：在 0.1.12 及以上版本新增了 log 字段。您可以通过在 encoder 中设置 pattern 来自定义 log 格式，例如：
 ```
 <encoder>
     <pattern>%d %-5level [%thread] %logger{0}: %msg</pattern>
 </encoder>
 ```
-message 输出样例：
+log 输出样例：
 ```
-message:  2018-07-15 21:12:29,682 INFO [main] TestAppender: info message.
+log:  2018-07-15 21:12:29,682 INFO [main] TestAppender: info message.
 ```
 
 **Q**：日志中为何没有 time 字段？
