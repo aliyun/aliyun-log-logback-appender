@@ -26,7 +26,7 @@ __topic__: yyy
 + message 日志内容。
 + throwable 日志异常信息（只有记录了异常信息，这个字段才会出现）。
 + thread 线程名称。
-+ time 日志打印时间。
++ time 日志打印时间（可以通过 timeFormat 或 timeZone 配置 time 字段的格式）。
 + log 自定义日志格式（只有设置了 encoder，这个字段才会出现）。
 + \_\_source\_\_ 日志来源，用户可在配置文件中指定。
 + \_\_topic\_\_ 日志主题，用户可在配置文件中指定。
