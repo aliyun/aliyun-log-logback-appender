@@ -55,10 +55,14 @@
         <retryTimes>3</retryTimes>
         <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
 
-        <!-- 可选项 通过配置 encoder 的 pattern 自定义 message 的格式 -->
+        <!-- 可选项 通过配置 encoder 的 pattern 自定义 log 的格式 -->
         <encoder>
             <pattern>%d %-5level [%thread] %logger{0}: %msg</pattern>
         </encoder>
+
+        <!-- 可选项 设置时间格式 -->
+        <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
+        <timeZone>UTC</timeZone>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO级别的日志 -->
             <level>INFO</level>
