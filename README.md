@@ -28,7 +28,7 @@ Field Specifications:
 + `throwable` is exception of the log (this field will appear only if the exception is recorded)
 + `thread` stands for thread name
 + `time` is the log's generation time (you can configure it's format through timeFormat and timeZone)
-+ `log` is custom log format(this field will appear only if you configure the encoder)
++ `log` is custom log format (this field will appear only if you configure the encoder)
 + `__source__` is the log's source, you can specify its value in conf file
 + `__topic__` is the log's topic, you can specify its value in conf file
 
