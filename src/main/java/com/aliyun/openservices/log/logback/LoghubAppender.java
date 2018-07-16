@@ -11,8 +11,11 @@ import com.aliyun.openservices.log.common.LogItem;
 import com.aliyun.openservices.log.producer.LogProducer;
 import com.aliyun.openservices.log.producer.ProducerConfig;
 import com.aliyun.openservices.log.producer.ProjectConfig;
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -41,7 +44,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     private String timeZone = "UTC";
     private String timeFormat = "yyyy-MM-dd'T'HH:mmZ";
-    private SimpleDateFormat formatter;
+    private DateTimeFormatter formatter;
 
     @Override
     public void start() {
@@ -53,8 +56,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     }
 
     private void doStart() {
-        formatter = new SimpleDateFormat(timeFormat);
-        formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
+        formatter = DateTimeFormat.forPattern(timeFormat).withZone(DateTimeZone.forID(timeZone));
         producerConfig.userAgent = "logback";
         producer = new LogProducer(producerConfig);
         producer.setProjectConfig(projectConfig);
@@ -100,7 +102,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         LogItem item = new LogItem();
         logItems.add(item);
         item.SetTime((int) (event.getTimeStamp() / 1000));
-        item.PushBack("time", formatter.format(new Date(event.getTimeStamp())));
+
+        DateTime dateTime = new DateTime(event.getTimeStamp());
+        item.PushBack("time", dateTime.toString(formatter));
         item.PushBack("level", event.getLevel().toString());
         item.PushBack("thread", event.getThreadName());
 
@@ -109,14 +113,19 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("location", caller[0].toString());
         }
 
-        String message = this.encoder != null ? new String(this.encoder.encode(eventObject)) : event.getFormattedMessage();
+        String message = event.getFormattedMessage();
+        item.PushBack("message", message);
+
         IThrowableProxy iThrowableProxy = event.getThrowableProxy();
         if (iThrowableProxy != null) {
-            message += CoreConstants.LINE_SEPARATOR;
-            message += getExceptionInfo(iThrowableProxy);
-            message += fullDump(event.getThrowableProxy().getStackTraceElementProxyArray());
+            String throwable = getExceptionInfo(iThrowableProxy);
+            throwable += fullDump(event.getThrowableProxy().getStackTraceElementProxyArray());
+            item.PushBack("throwable", throwable);
         }
-        item.PushBack("message", message);
+
+        if (this.encoder != null) {
+            item.PushBack("log", new String(this.encoder.encode(eventObject)));
+        }
 
         producer.send(projectConfig.projectName, logstore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
                 projectConfig.projectName, logstore, topic, source, logItems));
@@ -128,8 +137,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setTimeFormat(String timeFormat) {
         this.timeFormat = timeFormat;
-        formatter = new SimpleDateFormat(timeFormat);
-        formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
     }
 
     private String getExceptionInfo(IThrowableProxy iThrowableProxy) {
@@ -179,8 +186,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
-        formatter = new SimpleDateFormat(timeFormat);
-        formatter.setTimeZone(TimeZone.getTimeZone(timeZone));
     }
 
     // **** ==- ProjectConfig -== **********************
