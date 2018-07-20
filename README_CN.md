@@ -221,6 +221,8 @@ log:  2018-07-15 21:12:29,682 INFO [main] TestAppender: info message.
 
 `aliyun-log-logback-appender` 的依赖库 `aliyun-log-producer-java` 也会使用 slf4j 记录日志，所以会出现上述信息。
 
+参阅：https://www.slf4j.org/codes.html#replay
+
 ## 贡献者
 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
 
