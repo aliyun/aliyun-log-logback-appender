@@ -213,6 +213,14 @@ log:  2018-07-15 21:12:29,682 INFO [main] TestAppender: info message.
 <logger name="com.aliyun.openservices.log.producer.inner" level="OFF"/>
 ```
 
+**Q**：应用初始化时出现这样的信息 `A number (N) of logging calls during the initialization phase have been intercepted and are now being replayed. These are subject to the filtering rules of the underlying logging system.`？
+
+**A**：该信息只会在日志系统初始化阶段产生，并不影响后续日志记录的功能。
+
+当应用首次调用`LoggerFactory.getLogger()`方法时，日志系统进入初始化流程。初始化流程还未结束，再次调用`LoggerFactory.getLogger()`方法便会出现上述信息。这时，slf4j 会创建替代记录器（substitute loggers）并返回。在完成初始化后，替代记录器（substitute loggers）会将日志记录请求委托给合适的 logger。
+
+`aliyun-log-logback-appender` 的依赖库 `aliyun-log-producer-java` 也会使用 slf4j 记录日志，所以会出现上述信息。
+
 ## 贡献者
 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
 
