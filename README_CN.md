@@ -170,7 +170,7 @@ timeZone = UTC
 ## 错误诊断
 
 如果您发现数据没有写入日志服务，可通过如下步骤进行错误诊断。
-1. 检查配置文件 logback.xml 是否限定了 appender 只输出特定级别的日志。
+1. 检查配置文件 logback.xml 是否限定了 appender 只输出特定级别的日志。比如，是否设置了 root 或 logger 的 level 属性，是否在 appender 中设置了 [filter](https://logback.qos.ch/manual/filters.html)。
 2. 检查您项目中引入的 protobuf-java，aliyun-log-logback-appender 这两个 jar 包的版本是否和文档中`maven 工程中引入依赖`部分列出的 jar 包版本一致。
 3. 通过观察控制台的输出来诊断您的问题。Aliyun Log Logback Appender 会将 appender 运行过程中产生的异常写入 `ch.qos.logback.core.BasicStatusManager` 中。您可以通过配置 statusListener 来获取 BasicStatusManager 中的数据。例如，`<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>` 会将 BasicStatusManager 中的数据输出到控制台。
 4. 请检查您的 `logback.xml` 中是否包含选项 `<shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>`。数据会定期异步地发往服务端，加上此选项可以保证您的程序在正常退出时，内存中缓存的数据不丢失。
