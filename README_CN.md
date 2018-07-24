@@ -140,10 +140,10 @@ maxIOThreadSizeInPool = 8
 #指定发送失败时重试的次数，如果超过该值，会把失败信息记录到logback的StatusManager里，默认是3，可选参数
 retryTimes = 3
 
-#指定日志主题，可选参数
+#指定日志主题，默认为 ""，可选参数
 topic = [your topic]
 
-#指的日志来源，可选参数
+#指的日志来源，默认为应用程序所在宿主机的 IP，可选参数
 source = [your source]
 
 #输出到日志服务的时间的格式，默认是 yyyy-MM-dd'T'HH:mmZ，可选参数
@@ -170,9 +170,10 @@ timeZone = UTC
 ## 错误诊断
 
 如果您发现数据没有写入日志服务，可通过如下步骤进行错误诊断。
-* 检查您项目中引入的 protobuf-java，aliyun-log-logback-appender 这两个 jar 包的版本是否和文档中`maven 工程中引入依赖`部分列出的 jar 包版本一致。
-* 通过观察控制台的输出来诊断您的问题。Aliyun Log Logback Appender 会将 appender 运行过程中产生的异常写入 `ch.qos.logback.core.BasicStatusManager` 中。您可以通过配置 statusListener 来获取 BasicStatusManager 中的数据。例如，`<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>` 会将 BasicStatusManager 中的数据输出到控制台。
-* 请检查您的 `logback.xml` 中是否包含选项 `<shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>`。数据会定期异步地发往服务端，加上此选项可以保证您的程序在正常退出时，内存中缓存的数据不丢失。
+1. 检查配置文件 logback.xml 是否限定了 appender 只输出特定级别的日志。
+2. 检查您项目中引入的 protobuf-java，aliyun-log-logback-appender 这两个 jar 包的版本是否和文档中`maven 工程中引入依赖`部分列出的 jar 包版本一致。
+3. 通过观察控制台的输出来诊断您的问题。Aliyun Log Logback Appender 会将 appender 运行过程中产生的异常写入 `ch.qos.logback.core.BasicStatusManager` 中。您可以通过配置 statusListener 来获取 BasicStatusManager 中的数据。例如，`<statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>` 会将 BasicStatusManager 中的数据输出到控制台。
+4. 请检查您的 `logback.xml` 中是否包含选项 `<shutdownHook class="ch.qos.logback.core.hook.DelayingShutdownHook"/>`。数据会定期异步地发往服务端，加上此选项可以保证您的程序在正常退出时，内存中缓存的数据不丢失。
 
 ## 常见问题
 
