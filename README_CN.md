@@ -149,7 +149,7 @@ source = [your source]
 #输出到日志服务的时间的格式，默认是 yyyy-MM-dd'T'HH:mmZ，可选参数
 timeFormat = yyyy-MM-dd'T'HH:mmZ
 
-#输出到日志服务的时间的时区，默认是 UTC，可选参数
+#输出到日志服务的时间的时区，默认是 UTC，可选参数（如果希望 time 字段的时区为东八区，可将该值设定为 Asia/Shanghai）
 timeZone = UTC
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
@@ -223,6 +223,10 @@ log:  2018-07-15 21:12:29,682 INFO [main] TestAppender: info message.
 `aliyun-log-logback-appender` 的依赖库 `aliyun-log-producer-java` 也会使用 slf4j 记录日志，所以会出现上述信息。
 
 参阅：https://www.slf4j.org/codes.html#replay
+
+**Q**：如果想设置 `time` 字段的时区为东八区或其他时区，该如何指定 `timeZone` 的取值？
+
+**A**：当您将 `timeZone` 指定为 `Asia/Shanghai` 时，`time` 字段的时区将为东八区。timeZone 字段可能的取值请参考 [java-util-timezone](http://tutorials.jenkov.com/java-date-time/java-util-timezone.html)。
 
 ## 贡献者
 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
