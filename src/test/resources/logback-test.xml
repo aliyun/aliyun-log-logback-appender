@@ -27,6 +27,7 @@
 
         <!-- 可选项 设置时间格式 -->
         <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
+        可选项 设置时区，默认UTC，东八区可设置为Asia/Shanghai
         <timeZone>UTC</timeZone>
     </appender>
 

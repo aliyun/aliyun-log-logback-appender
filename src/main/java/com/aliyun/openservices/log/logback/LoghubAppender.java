@@ -127,6 +127,13 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("log", new String(this.encoder.encode(eventObject)));
         }
 
+        Map<String,String> mdc = event.getMDCPropertyMap();
+        if (mdc.size() > 0) {
+            for (Map.Entry<String, String> entry : mdc.entrySet()) {
+                item.PushBack(entry.getKey(), entry.getValue());
+            }
+        }
+
         producer.send(projectConfig.projectName, logstore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
                 projectConfig.projectName, logstore, topic, source, logItems));
     }
