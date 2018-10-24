@@ -58,7 +58,7 @@ Field Specifications:
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.12</version>
+    <version>0.1.13</version>
 </dependency>
 ```
 
