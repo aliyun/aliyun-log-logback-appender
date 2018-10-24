@@ -12,17 +12,17 @@ import java.util.List;
  */
 public class LoghubAppenderCallback<E> extends ILogCallback {
 
-    private LoghubAppender<E> loghubAppender;
+    protected LoghubAppender<E> loghubAppender;
 
-    private String project;
+    protected String project;
 
-    private String logstore;
+    protected String logstore;
 
-    private String topic;
+    protected String topic;
 
-    private String source;
+    protected String source;
 
-    private List<LogItem> logItems;
+    protected List<LogItem> logItems;
 
     public LoghubAppenderCallback(LoghubAppender<E> loghubAppender, String project, String logstore, String topic,
                                   String source, List<LogItem> logItems) {

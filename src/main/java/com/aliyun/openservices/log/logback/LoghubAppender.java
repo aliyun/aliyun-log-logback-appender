@@ -31,20 +31,20 @@ import java.util.*;
  */
 public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
-    private Encoder<E> encoder;
+    protected Encoder<E> encoder;
 
-    private ProducerConfig producerConfig = new ProducerConfig();
-    private ProjectConfig projectConfig = new ProjectConfig();
+    protected ProducerConfig producerConfig = new ProducerConfig();
+    protected ProjectConfig projectConfig = new ProjectConfig();
 
-    private LogProducer producer;
+    protected LogProducer producer;
 
-    private String logstore; //
-    private String topic = ""; //
-    private String source = ""; //
+    protected String logstore; //
+    protected String topic = ""; //
+    protected String source = ""; //
 
-    private String timeZone = "UTC";
-    private String timeFormat = "yyyy-MM-dd'T'HH:mmZ";
-    private DateTimeFormatter formatter;
+    protected String timeZone = "UTC";
+    protected String timeFormat = "yyyy-MM-dd'T'HH:mmZ";
+    protected DateTimeFormatter formatter;
 
     @Override
     public void start() {
