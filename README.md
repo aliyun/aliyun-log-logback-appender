@@ -116,7 +116,7 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
 
 By extending the SLSKVConverter class, you can easily customize your own key-value log items. 
 
-`**_java class_**`
+`java class :`
 ``` 
 public class CustomerKVLogConverter extends SLSKVConverter {
 
@@ -138,7 +138,7 @@ public class CustomerKVLogConverter extends SLSKVConverter {
 
 And then, we just define it as a logback converter and use it:
 
-`**_logback.xml_**`
+`logback.xml :`
 
 ```
    
