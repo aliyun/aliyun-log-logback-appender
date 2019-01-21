@@ -112,6 +112,42 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
 + To prevent data loss when the process exits, please remember to add label `DelayingShutdownHook`.
 + The LoghubAppender will catch the exceptions in the process of running and put them into `BasicStatusManager`, you can obtain the exception information through `OnConsoleStatusListener` or other means. Reference: https://logback.qos.ch/access.html
 
+### 3. Customize your key-value information shown in the log-console page.
+
+By extending the SLSKVConverter class, you can easily customize your own key-value log items. 
+
+`**_java class_**`
+``` 
+public class CustomerKVLogConverter extends SLSKVConverter {
+
+    /**
+     * Implement this method to add your interested kvs.
+     *
+     * @param kvs
+     * @param iLoggingEvent
+     */
+    @Override
+    public void addKeyValue(Map<String, String> kvs, ILoggingEvent iLoggingEvent) {
+        
+        kvs.put("user_id", Session.getUserId());
+        kvs.put("key", getValue(iLoggingEvent)); 
+    }
+}
+
+```
+
+And then, we just define it as a logback converter and use it:
+
+`**_logback.xml_**`
+
+```
+   
+<conversionRule conversionWord="customerConverter" converterClass="xxx.xxx.xxx.CustomerKVLogConverter" />
+<property name="CUSTOMER_LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level [%logger{50}] %customerConverter - %msg%n"/>
+
+```
+
+
 ## Parameter Description
 
 The `Aliyun Log Logback Appender` provides following parameters.
