@@ -112,7 +112,7 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
 + To prevent data loss when the process exits, please remember to add label `DelayingShutdownHook`.
 + The LoghubAppender will catch the exceptions in the process of running and put them into `BasicStatusManager`, you can obtain the exception information through `OnConsoleStatusListener` or other means. Reference: https://logback.qos.ch/access.html
 
-### 3. Customize your key-value information shown in the log-console page.
+### 3. [Optional] Customize your key-value information shown in the log-console page.
 
 By extending the SLSKVConverter class, you can easily customize your own key-value log items. 
 
