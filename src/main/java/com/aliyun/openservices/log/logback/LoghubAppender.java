@@ -7,6 +7,7 @@ import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.encoder.Encoder;
+import com.aliyun.openservices.log.common.LogContent;
 import com.aliyun.openservices.log.common.LogItem;
 import com.aliyun.openservices.log.producer.LogProducer;
 import com.aliyun.openservices.log.producer.ProducerConfig;
@@ -16,7 +17,10 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * ProducerConfig: Default value
@@ -45,6 +49,8 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     protected String timeZone = "UTC";
     protected String timeFormat = "yyyy-MM-dd'T'HH:mmZ";
     protected DateTimeFormatter formatter;
+
+    private static final String SLSKV_PATTERN = "SLS_KV#.*?#";
 
     @Override
     public void start() {
@@ -91,6 +97,31 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
     }
 
+    /**
+     * Retrieving key-value from message.
+     * @param message e.g.,"SLS_KV(${key}:${value} | ${key}:${value}) ${real_message}"
+     * @return
+     */
+    private static List<LogContent> getItemsFromMessage(String message){
+        List<LogContent> result = new ArrayList<LogContent>();
+        if(message == null){
+            return result;
+        }
+        message = message.substring(7, message.length() - 1);
+        String [] kvStrings = message.split("\\|");
+        for(String kv : kvStrings){
+            kv = kv.trim();
+            String [] kvs = kv.split(":");
+            if(kvs.length == 2){
+                String k = kvs[0].trim();
+                String v = kvs[1].trim();
+                result.add(new LogContent(k, v));
+            }
+        }
+        return result;
+    }
+
+
     private void appendEvent(E eventObject) {
         //init Event Object
         if (!(eventObject instanceof LoggingEvent)) {
@@ -115,7 +146,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
         String message = event.getFormattedMessage();
         item.PushBack("message", message);
-
         IThrowableProxy iThrowableProxy = event.getThrowableProxy();
         if (iThrowableProxy != null) {
             String throwable = getExceptionInfo(iThrowableProxy);
@@ -123,13 +153,31 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("throwable", throwable);
         }
 
+
+
         if (this.encoder != null) {
-            item.PushBack("log", new String(this.encoder.encode(eventObject)));
+            String logOutPut = new String(this.encoder.encode(eventObject));
+            String slsKVString = getSLSKVString(logOutPut);
+            logOutPut = logOutPut.replace(slsKVString, "");
+            item.PushBack("log", logOutPut);
+            for(LogContent logContent : getItemsFromMessage(slsKVString)){
+                item.PushBack(logContent);
+            }
         }
 
         producer.send(projectConfig.projectName, logstore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
                 projectConfig.projectName, logstore, topic, source, logItems));
     }
+
+
+    private static String getSLSKVString(String candidate){
+        Matcher matcher = Pattern.compile(SLSKV_PATTERN).matcher(candidate);
+        while(matcher.find()){
+            return matcher.group();
+        }
+        return null;
+    }
+
 
     public String getTimeFormat() {
         return timeFormat;
