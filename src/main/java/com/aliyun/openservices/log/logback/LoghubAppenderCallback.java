@@ -1,16 +1,15 @@
 package com.aliyun.openservices.log.logback;
 
+import com.aliyun.openservices.aliyun.log.producer.Callback;
+import com.aliyun.openservices.aliyun.log.producer.Result;
 import com.aliyun.openservices.log.common.LogItem;
-import com.aliyun.openservices.log.exception.LogException;
-import com.aliyun.openservices.log.producer.ILogCallback;
-import com.aliyun.openservices.log.response.PutLogsResponse;
 
 import java.util.List;
 
 /**
  * Created by brucewu on 2018/1/5.
  */
-public class LoghubAppenderCallback<E> extends ILogCallback {
+public class LoghubAppenderCallback<E> implements Callback {
 
     protected LoghubAppender<E> loghubAppender;
 
@@ -35,10 +34,17 @@ public class LoghubAppenderCallback<E> extends ILogCallback {
         this.logItems = logItems;
     }
 
-    public void onCompletion(PutLogsResponse putLogsResponse, LogException e) {
-        if (e != null) {
-            loghubAppender.addError("Failed to putLogs. project=" + project + " logstore=" + logstore +
-                    " topic=" + topic + " source=" + source + " logItems=" + logItems, e);
+    @Override
+    public void onCompletion(Result result) {
+        if (!result.isSuccessful()) {
+            loghubAppender.addError(
+                    "Failed to send log, project=" + project
+                            + ", logStore=" + logstore
+                            + ", topic=" + topic
+                            + ", source=" + source
+                            + ", logItem=" + logItems
+                            + ", errorCode=" + result.getErrorCode()
+                            + ", errorMessage=" + result.getErrorMessage());
         }
     }
 }

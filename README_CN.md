@@ -41,7 +41,7 @@ __topic__: yyy
 
 ## 版本支持
 * logback 1.2.3
-* log-loghub-producer 0.1.13
+* log-loghub-producer 0.2.0
 * protobuf-java 2.5.0
 
 
@@ -74,11 +74,11 @@ __topic__: yyy
     <!-- 账号及网络配置 -->
     <endpoint>your project endpoint</endpoint>
     <accessKeyId>your accesskey id</accessKeyId>
-    <accessKey>your accesskey</accessKey>
+    <accessKeySecret>your accesskey</accessKeySecret>
 
     <!-- sls 项目配置 -->
-    <projectName>your project</projectName>
-    <logstore>your logstore</logstore>
+    <project>your project</project>
+    <logStore>your logStore</logstore>
     <!--必选项 (end)-->
 
     <!-- 可选项 -->
@@ -86,12 +86,15 @@ __topic__: yyy
     <source>your source</source>
 
     <!-- 可选项 详见 '参数说明'-->
-    <packageTimeoutInMS>3000</packageTimeoutInMS>
-    <logsCountPerPackage>4096</logsCountPerPackage>
-    <logsBytesPerPackage>3145728</logsBytesPerPackage>
-    <memPoolSizeInByte>104857600</memPoolSizeInByte>
-    <retryTimes>3</retryTimes>
-    <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
+    <totalSizeInBytes>104857600</totalSizeInBytes>
+    <maxBlockMs>60000</maxBlockMs>
+    <ioThreadCount>8</ioThreadCount>
+    <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
+    <batchCountThreshold>4096</batchCountThreshold>
+    <lingerMs>2000</lingerMs>
+    <retries>10</retries>
+    <baseRetryBackoffMs>100</baseRetryBackoffMs>
+    <maxRetryBackoffMs>100</maxRetryBackoffMs>
     
     <!-- 可选项 通过配置 encoder 的 pattern 自定义 log 的格式 -->
     <encoder>
@@ -118,27 +121,37 @@ Aliyun Log Logback Appender 可供配置的属性（参数）如下，其中注�
 
 ```
 #日志服务的 project 名，必选参数
-projectName = [your project]
+project = [your project]
 #日志服务的 logstore 名，必选参数
-logstore = [your logstore]
+logStore = [your logStore]
 #日志服务的 HTTP 地址，必选参数
 endpoint = [your project endpoint]
 #用户身份标识，必选参数
 accessKeyId = [your accesskey id]
-accessKey = [your accesskey]
+accessKeySecret = [your accessKeySecret]
 
-#被缓存起来的日志的发送超时时间，如果缓存超时，则会被立即发送，单位是毫秒，默认值为3000，最小值为10，可选参数
-packageTimeoutInMS = 3000
-#每个缓存的日志包中包含日志数量的最大值，不能超过 4096，可选参数
-logsCountPerPackage = 4096
-#每个缓存的日志包的大小的上限，不能超过 3MB，单位是字节，可选参数
-logsBytesPerPackage = 3145728
-#Appender 实例可以使用的内存的上限，单位是字节，默认是 100MB，可选参数
-memPoolSizeInByte = 1048576000
-#指定I/O线程池最大线程数量，主要用于发送数据到日志服务，默认是8，可选参数
-maxIOThreadSizeInPool = 8
-#指定发送失败时重试的次数，如果超过该值，会把失败信息记录到logback的StatusManager里，默认是3，可选参数
-retryTimes = 3
+#单个 producer 实例能缓存的日志大小上限，默认为 100MB。
+totalSizeInBytes=104857600
+#如果 producer 可用空间不足，调用者在 send 方法上的最大阻塞时间，默认为 60 秒。
+maxBlockMs=60
+#执行日志发送任务的线程池大小，默认为可用处理器个数。
+ioThreadCount=8
+#当一个 ProducerBatch 中缓存的日志大小大于等于 batchSizeThresholdInBytes 时，该 batch 将被发送，默认为 512 KB，最大可设置成 5MB。
+batchSizeThresholdInBytes=524288
+#当一个 ProducerBatch 中缓存的日志条数大于等于 batchCountThreshold 时，该 batch 将被发送，默认为 4096，最大可设置成 40960。
+batchCountThreshold=4096
+#一个 ProducerBatch 从创建到可发送的逗留时间，默认为 2 秒，最小可设置成 100 毫秒。
+lingerMs=2000
+#如果某个 ProducerBatch 首次发送失败，能够对其重试的次数，默认为 10 次。
+#如果 retries 小于等于 0，该 ProducerBatch 首次发送失败后将直接进入失败队列。
+retries=10
+#该参数越大能让您追溯更多的信息，但同时也会消耗更多的内存。
+maxReservedAttempts=11
+#首次重试的退避时间，默认为 100 毫秒。
+#Producer 采样指数退避算法，第 N 次重试的计划等待时间为 baseRetryBackoffMs * 2^(N-1)。
+baseRetryBackoffMs=100
+#重试的最大退避时间，默认为 50 秒。
+maxRetryBackoffMs=100
 
 #指定日志主题，默认为 ""，可选参数
 topic = [your topic]

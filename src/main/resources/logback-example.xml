@@ -7,11 +7,11 @@
         <!-- 账号及网络配置 -->
         <endpoint></endpoint>
         <accessKeyId></accessKeyId>
-        <accessKey></accessKey>
+        <accessKeySecret></accessKeySecret>
 
         <!-- sls 项目配置 -->
-        <projectName>test-proj</projectName>
-        <logstore>store1</logstore>
+        <project>test-proj</project>
+        <logStore>store1</logStore>
         <!--必选项 (end)-->
 
         <!-- 可选项 -->
@@ -19,12 +19,15 @@
         <source>source1</source>
 
         <!-- 可选项 详见 '参数说明'-->
-        <packageTimeoutInMS>3000</packageTimeoutInMS>
-        <logsCountPerPackage>4096</logsCountPerPackage>
-        <logsBytesPerPackage>3145728</logsBytesPerPackage>
-        <memPoolSizeInByte>104857600</memPoolSizeInByte>
-        <retryTimes>3</retryTimes>
-        <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
+        <totalSizeInBytes>104857600</totalSizeInBytes>
+        <maxBlockMs>60000</maxBlockMs>
+        <ioThreadCount>8</ioThreadCount>
+        <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
+        <batchCountThreshold>4096</batchCountThreshold>
+        <lingerMs>2000</lingerMs>
+        <retries>10</retries>
+        <baseRetryBackoffMs>100</baseRetryBackoffMs>
+        <maxRetryBackoffMs>100</maxRetryBackoffMs>
 
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 打印WARN,ERROR级别的日志 -->
             <level>WARN</level>
@@ -36,10 +39,10 @@
         <!-- 账号及网络配置 -->
         <endpoint></endpoint>
         <accessKeyId></accessKeyId>
-        <accessKey></accessKey>
+        <accessKeySecret></accessKeySecret>
 
         <!-- sls 项目配置 -->
-        <projectName>test-proj</projectName>
+        <project>test-proj</project>
         <logstore>store2</logstore>
         <!--必选项 (end)-->
 
@@ -48,12 +51,15 @@
         <source>source2</source>
 
         <!-- 可选项 详见 '参数说明'-->
-        <packageTimeoutInMS>3000</packageTimeoutInMS>
-        <logsCountPerPackage>4096</logsCountPerPackage>
-        <logsBytesPerPackage>3145728</logsBytesPerPackage>
-        <memPoolSizeInByte>104857600</memPoolSizeInByte>
-        <retryTimes>3</retryTimes>
-        <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
+        <totalSizeInBytes>104857600</totalSizeInBytes>
+        <maxBlockMs>60000</maxBlockMs>
+        <ioThreadCount>8</ioThreadCount>
+        <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
+        <batchCountThreshold>4096</batchCountThreshold>
+        <lingerMs>2000</lingerMs>
+        <retries>10</retries>
+        <baseRetryBackoffMs>100</baseRetryBackoffMs>
+        <maxRetryBackoffMs>100</maxRetryBackoffMs>
 
         <!-- 可选项 通过配置 encoder 的 pattern 自定义 log 的格式 -->
         <encoder>

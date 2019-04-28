@@ -7,10 +7,13 @@ import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.encoder.Encoder;
+import com.aliyun.openservices.aliyun.log.producer.LogProducer;
+import com.aliyun.openservices.aliyun.log.producer.Producer;
+import com.aliyun.openservices.aliyun.log.producer.ProducerConfig;
+import com.aliyun.openservices.aliyun.log.producer.ProjectConfig;
+import com.aliyun.openservices.aliyun.log.producer.ProjectConfigs;
+import com.aliyun.openservices.aliyun.log.producer.errors.ProducerException;
 import com.aliyun.openservices.log.common.LogItem;
-import com.aliyun.openservices.log.producer.LogProducer;
-import com.aliyun.openservices.log.producer.ProducerConfig;
-import com.aliyun.openservices.log.producer.ProjectConfig;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -31,14 +34,24 @@ import java.util.*;
  */
 public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
+    private String project;
+
+    private String endpoint;
+
+    private String accessKeyId;
+
+    private String accessKeySecret;
+
+    private String userAgent = "logback";
+
     protected Encoder<E> encoder;
 
-    protected ProducerConfig producerConfig = new ProducerConfig();
-    protected ProjectConfig projectConfig = new ProjectConfig();
+    protected ProducerConfig producerConfig = new ProducerConfig(new ProjectConfigs());
+    protected ProjectConfig projectConfig;
 
-    protected LogProducer producer;
+    protected Producer producer;
 
-    protected String logstore; //
+    protected String logStore; //
     protected String topic = ""; //
     protected String source = ""; //
 
@@ -57,11 +70,18 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     private void doStart() {
         formatter = DateTimeFormat.forPattern(timeFormat).withZone(DateTimeZone.forID(timeZone));
-        producerConfig.userAgent = "logback";
-        producer = new LogProducer(producerConfig);
-        producer.setProjectConfig(projectConfig);
-
+        producer = createProducer();
         super.start();
+    }
+
+    public Producer createProducer() {
+        projectConfig = buildProjectConfig();
+        producerConfig.getProjectConfigs().put(projectConfig);
+        return new LogProducer(producerConfig);
+    }
+
+    private ProjectConfig buildProjectConfig() {
+        return new ProjectConfig(project, endpoint, accessKeyId, accessKeySecret, null, userAgent);
     }
 
     @Override
@@ -73,12 +93,12 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
     }
 
-    private void doStop() throws InterruptedException {
-        if (!isStarted())
+    private void doStop() throws InterruptedException, ProducerException {
+        if (!isStarted()) {
             return;
+        }
 
         super.stop();
-        producer.flush();
         producer.close();
     }
 
@@ -127,8 +147,17 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("log", new String(this.encoder.encode(eventObject)));
         }
 
-        producer.send(projectConfig.projectName, logstore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
-                projectConfig.projectName, logstore, topic, source, logItems));
+        try {
+            producer.send(projectConfig.getProject(), logStore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
+                    projectConfig.getProject(), logStore, topic, source, logItems));
+        } catch (Exception e) {
+            this.addError(
+                    "Failed to send log, project=" + project
+                            + ", logStore=" + logStore
+                            + ", topic=" + topic
+                            + ", source=" + source
+                            + ", logItem=" + logItems, e);
+        }
     }
 
     public String getTimeFormat() {
@@ -156,12 +185,12 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         return builder.toString();
     }
 
-    public String getLogstore() {
-        return logstore;
+    public String getLogStore() {
+        return logStore;
     }
 
-    public void setLogstore(String logstore) {
-        this.logstore = logstore;
+    public void setLogStore(String logStore) {
+        this.logStore = logStore;
     }
 
     public String getTopic() {
@@ -189,98 +218,125 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     }
 
     // **** ==- ProjectConfig -== **********************
-    public String getProjectName() {
-        return projectConfig.projectName;
+    public String getProject() {
+        return project;
     }
 
-    public void setProjectName(String projectName) {
-        projectConfig.projectName = projectName;
+    public void setProject(String project) {
+        this.project = project;
     }
 
     public String getEndpoint() {
-        return projectConfig.endpoint;
+        return endpoint;
     }
 
     public void setEndpoint(String endpoint) {
-        projectConfig.endpoint = endpoint;
+        this.endpoint = endpoint;
     }
 
     public String getAccessKeyId() {
-        return projectConfig.accessKeyId;
+        return accessKeyId;
     }
 
     public void setAccessKeyId(String accessKeyId) {
-        projectConfig.accessKeyId = accessKeyId;
+        this.accessKeyId = accessKeyId;
     }
 
-    public String getAccessKey() {
-        return projectConfig.accessKey;
+    public String getAccessKeySecret() {
+        return accessKeySecret;
     }
 
-    public void setAccessKey(String accessKey) {
-        projectConfig.accessKey = accessKey;
+    public void setAccessKeySecret(String accessKeySecret) {
+        this.accessKeySecret = accessKeySecret;
     }
 
-    public String getStsToken() {
-        return projectConfig.stsToken;
+    public String getUserAgent() {
+        return userAgent;
     }
 
-    public void setStsToken(String stsToken) {
-        projectConfig.stsToken = stsToken;
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
     }
 
-    // **** ==- ProjectConfig (end) -== **********************
-
-
-    // **** ==- ProducerConfig (end) -== **********************
-    public int getPackageTimeoutInMS() {
-        return producerConfig.packageTimeoutInMS;
+    public int getTotalSizeInBytes() {
+        return producerConfig.getTotalSizeInBytes();
     }
 
-    public void setPackageTimeoutInMS(int packageTimeoutInMS) {
-        producerConfig.packageTimeoutInMS = packageTimeoutInMS;
+    public void setTotalSizeInBytes(int totalSizeInBytes) {
+        producerConfig.setTotalSizeInBytes(totalSizeInBytes);
     }
 
-    public int getLogsCountPerPackage() {
-        return producerConfig.logsCountPerPackage;
+    public long getMaxBlockMs() {
+        return producerConfig.getMaxBlockMs();
     }
 
-    public void setLogsCountPerPackage(int logsCountPerPackage) {
-        producerConfig.logsCountPerPackage = logsCountPerPackage;
+    public void setMaxBlockMs(long maxBlockMs) {
+        producerConfig.setMaxBlockMs(maxBlockMs);
     }
 
-    public int getLogsBytesPerPackage() {
-        return producerConfig.logsBytesPerPackage;
+    public int getIoThreadCount() {
+        return producerConfig.getIoThreadCount();
     }
 
-    public void setLogsBytesPerPackage(int logsBytesPerPackage) {
-        producerConfig.logsBytesPerPackage = logsBytesPerPackage;
+    public void setIoThreadCount(int ioThreadCount) {
+        producerConfig.setIoThreadCount(ioThreadCount);
     }
 
-    public int getMemPoolSizeInByte() {
-        return producerConfig.memPoolSizeInByte;
+    public int getBatchSizeThresholdInBytes() {
+        return producerConfig.getBatchSizeThresholdInBytes();
     }
 
-    public void setMemPoolSizeInByte(int memPoolSizeInByte) {
-        producerConfig.memPoolSizeInByte = memPoolSizeInByte;
+    public void setBatchSizeThresholdInBytes(int batchSizeThresholdInBytes) {
+        producerConfig.setBatchSizeThresholdInBytes(batchSizeThresholdInBytes);
     }
 
-    public int getMaxIOThreadSizeInPool() {
-        return producerConfig.maxIOThreadSizeInPool;
+    public int getBatchCountThreshold() {
+        return producerConfig.getBatchCountThreshold();
     }
 
-    public void setMaxIOThreadSizeInPool(int ioThreadsCount) {
-        producerConfig.maxIOThreadSizeInPool = ioThreadsCount;
+    public void setBatchCountThreshold(int batchCountThreshold) {
+        producerConfig.setBatchCountThreshold(batchCountThreshold);
     }
 
-    public int getRetryTimes() {
-        return producerConfig.retryTimes;
+    public int getLingerMs() {
+        return producerConfig.getLingerMs();
     }
 
-    public void setRetryTimes(int retryTimes) {
-        producerConfig.retryTimes = retryTimes;
+    public void setLingerMs(int lingerMs) {
+        producerConfig.setLingerMs(lingerMs);
     }
-    // **** ==- ProducerConfig (end) -== **********************
+
+    public int getRetries() {
+        return producerConfig.getRetries();
+    }
+
+    public void setRetries(int retries) {
+        producerConfig.setRetries(retries);
+    }
+
+    public int getMaxReservedAttempts() {
+        return producerConfig.getMaxReservedAttempts();
+    }
+
+    public void setMaxReservedAttempts(int maxReservedAttempts) {
+        producerConfig.setMaxReservedAttempts(maxReservedAttempts);
+    }
+
+    public long getBaseRetryBackoffMs() {
+        return producerConfig.getBaseRetryBackoffMs();
+    }
+
+    public void setBaseRetryBackoffMs(long baseRetryBackoffMs) {
+        producerConfig.setBaseRetryBackoffMs(baseRetryBackoffMs);
+    }
+
+    public long getMaxRetryBackoffMs() {
+        return producerConfig.getMaxRetryBackoffMs();
+    }
+
+    public void setMaxRetryBackoffMs(long maxRetryBackoffMs) {
+        producerConfig.setMaxRetryBackoffMs(maxRetryBackoffMs);
+    }
 
     public Encoder<E> getEncoder() {
         return encoder;

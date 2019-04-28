@@ -41,7 +41,7 @@ Field Specifications:
 
 ## Supported Version
 * logback 1.2.3
-* log-loghub-producer 0.1.13
+* aliyun-log-producer 0.2.0
 * protobuf-java 2.5.0
 
 
@@ -74,11 +74,11 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
     <!-- Configure account and network  -->
     <endpoint>your project endpoint</endpoint>
     <accessKeyId>your accesskey id</accessKeyId>
-    <accessKey>your accesskey</accessKey>
+    <accessKeySecret>your accesskey</accessKeySecret>
 
     <!-- Configure sls -->
-    <projectName>your project</projectName>
-    <logstore>your logstore</logstore>
+    <project>your project</project>
+    <logStore>your logStore</logstore>
     <!-- Required parameters(end) -->
 
     <!-- Optional parameters -->
@@ -86,12 +86,15 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
     <source>your source</source>
 
     <!-- Optional parameters -->
-    <packageTimeoutInMS>3000</packageTimeoutInMS>
-    <logsCountPerPackage>4096</logsCountPerPackage>
-    <logsBytesPerPackage>3145728</logsBytesPerPackage>
-    <memPoolSizeInByte>104857600</memPoolSizeInByte>
-    <retryTimes>3</retryTimes>
-    <maxIOThreadSizeInPool>8</maxIOThreadSizeInPool>
+    <totalSizeInBytes>104857600</totalSizeInBytes>
+    <maxBlockMs>60000</maxBlockMs>
+    <ioThreadCount>8</ioThreadCount>
+    <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
+    <batchCountThreshold>4096</batchCountThreshold>
+    <lingerMs>2000</lingerMs>
+    <retries>10</retries>
+    <baseRetryBackoffMs>100</baseRetryBackoffMs>
+    <maxRetryBackoffMs>100</maxRetryBackoffMs>
     
     <!-- Optional parameters -->
     <encoder>
@@ -117,27 +120,33 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
 The `Aliyun Log Logback Appender` provides following parameters.
 ```
 # Specify the project name of your log services, required
-projectName = [your project]
+project = [your project]
 # Specify the logstore of your log services, required
-logstore = [your logstore]
+logStore = [your logStore]
 # Specify the HTTP endpoint of your log services, required
 endpoint = [your project endpoint]
 # Specify the account information of your log services, required
 accessKeyId = [your accesskey id]
-accessKey = [your accesskey]
+accessKeySecret = [your accessKeySecret]
 
-# Specify the timeout for sending package, in milliseconds, default is 3000, the lower bound is 10, optional
-packageTimeoutInMS = 3000
-# Specify the maximum log count per package, the upper limit is 4096, optional
-logsCountPerPackage = 4096
-# Specify the maximum cache size per package, the upper limit is 3MB, in bytes, optional
-logsBytesPerPackage = 3145728
-# The upper limit of the memory that can be used by appender, in bytes, default is 100MB, optional
-memPoolSizeInByte = 1048576000
-# Specify the I/O thread pool's maximum pool size, the main function of the I/O thread pool is to send data, default is 8, optional
-maxIOThreadSizeInPool = 8
-# Specify the retry times when failing to send data, if exceeds this value, the appender will record the failure message to BasicStatusManager, default is 3, optional
-retryTimes = 3
+# The upper limit log size that a single producer instance can hold, default is 100MB.
+totalSizeInBytes=104857600
+# If the producer has insufficient free space, the caller's maximum blocking time on the send method, defaults is 60 seconds.
+maxBlockMs=60
+# The thread pool size for executing log sending tasks, defaults is the number of processors available.
+ioThreadCount=8
+# When the size of the cached log in a Producer Batch is greater than or equal batchSizeThresholdInBytes, the batch will be send, default is 512KB, maximum can be set to 5MB.
+batchSizeThresholdInBytes=524288
+# When the number of log entries cached in a ProducerBatch is greater than or equal to batchCountThreshold, the batch will be send.
+batchCountThreshold=4096
+# A ProducerBatch has a residence time from creation to sending, defaulting is 2 seconds and a minimum of 100 milliseconds.
+lingerMs=2000
+# The number of times a Producer Batch can be retried if it fails to send for the first time, default is 10.
+retries=10
+# The backoff time for the first retry, default 100 milliseconds.
+baseRetryBackoffMs=100
+# The maximum backoff time for retries, default is 50 seconds.
+maxRetryBackoffMs=100
 
 # Specify the topic of your log, default is "", optional
 topic = [your topic]

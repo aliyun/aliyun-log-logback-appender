@@ -3,7 +3,8 @@ package com.aliyun.openservices.log.logback;
 import ch.qos.logback.classic.LoggerContext;
 import ch.qos.logback.core.status.Status;
 import ch.qos.logback.core.status.StatusManager;
-import com.aliyun.openservices.log.producer.ProducerConfig;
+import com.aliyun.openservices.aliyun.log.producer.ProducerConfig;
+import com.aliyun.openservices.aliyun.log.producer.ProjectConfigs;
 import org.junit.AfterClass;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -18,9 +19,9 @@ public class TestAppender {
     private static final Logger LOGGER = LoggerFactory.getLogger(TestAppender.class);
 
     private static void sleep() {
-        ProducerConfig producerConfig = new ProducerConfig();
+        ProducerConfig producerConfig = new ProducerConfig(new ProjectConfigs());
         try {
-            Thread.sleep(2 * producerConfig.packageTimeoutInMS);
+            Thread.sleep(2 * producerConfig.getLingerMs());
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
