@@ -78,7 +78,7 @@ __topic__: yyy
 
     <!-- sls 项目配置 -->
     <project>your project</project>
-    <logStore>your logStore</logstore>
+    <logStore>your logStore</logStore>
     <!--必选项 (end)-->
 
     <!-- 可选项 -->
