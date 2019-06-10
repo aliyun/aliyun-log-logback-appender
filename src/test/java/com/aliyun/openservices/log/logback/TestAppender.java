@@ -9,6 +9,7 @@ import org.junit.AfterClass;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 
 import static org.junit.Assert.assertNotEquals;
 
@@ -47,6 +48,8 @@ public class TestAppender {
 
     @Test
     public void testLogThrowable() {
+        MDC.put("MDC_KEY","MDC_VALUE");
+        MDC.put("THREAD_ID", String.valueOf(Thread.currentThread().getId()));
         LOGGER.error("This is a test error message logged by logback.",
                 new UnsupportedOperationException("Logback UnsupportedOperationException"));
     }

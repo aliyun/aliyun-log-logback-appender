@@ -30,15 +30,27 @@
 
         <!-- 可选项 设置时间格式 -->
         <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
-        <timeZone>UTC</timeZone>
+        <timeZone>GMT+08</timeZone>
+
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg</pattern>
+        </encoder>
+        <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
     </appender>
 
     <!-- 可用来获取StatusManager中的状态
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
     -->
-
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder
+            by default -->
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg %n</pattern>
+        </encoder>
+    </appender>
     <root>
-        <level value="DEBUG"/>
+        <level value="WARN"/>
         <appender-ref ref="aliyun"/>
+        <appender-ref ref="STDOUT"/>
     </root>
 </configuration>

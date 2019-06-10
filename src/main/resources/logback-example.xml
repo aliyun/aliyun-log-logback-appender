@@ -32,6 +32,8 @@
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter"><!-- 打印WARN,ERROR级别的日志 -->
             <level>WARN</level>
         </filter>
+
+        <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
     </appender>
 
     <appender name="loghubAppender2" class="com.aliyun.openservices.log.logback.LoghubAppender">
@@ -76,13 +78,15 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
+
+        <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <!-- encoders are assigned the type ch.qos.logback.classic.encoder.PatternLayoutEncoder
             by default -->
         <encoder>
-            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg</pattern>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg %X{THREAD_ID} %n</pattern>
         </encoder>
     </appender>
 

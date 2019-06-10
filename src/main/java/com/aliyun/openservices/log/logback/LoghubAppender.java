@@ -19,6 +19,8 @@ import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.time.Instant;
+import java.time.ZoneId;
 import java.util.*;
 
 /**
@@ -59,6 +61,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     protected String timeFormat = "yyyy-MM-dd'T'HH:mmZ";
     protected DateTimeFormatter formatter;
 
+    protected java.time.format.DateTimeFormatter formatter1;
+    private String mdcFields;
+
     @Override
     public void start() {
         try {
@@ -69,7 +74,11 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     }
 
     private void doStart() {
-        formatter = DateTimeFormat.forPattern(timeFormat).withZone(DateTimeZone.forID(timeZone));
+        try {
+            formatter = DateTimeFormat.forPattern(timeFormat).withZone(DateTimeZone.forID(timeZone));
+        }catch (Exception e){
+            formatter1 = java.time.format.DateTimeFormatter.ofPattern(timeFormat).withZone(ZoneId.of(timeZone));
+        }
         producer = createProducer();
         super.start();
     }
@@ -123,8 +132,14 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         logItems.add(item);
         item.SetTime((int) (event.getTimeStamp() / 1000));
 
-        DateTime dateTime = new DateTime(event.getTimeStamp());
-        item.PushBack("time", dateTime.toString(formatter));
+        if(formatter!=null){
+            DateTime dateTime = new DateTime(event.getTimeStamp());
+            item.PushBack("time", dateTime.toString(formatter));
+        }else {
+            Instant instant = Instant.ofEpochMilli(event.getTimeStamp());
+            item.PushBack("time", formatter1.format(instant));
+        }
+
         item.PushBack("level", event.getLevel().toString());
         item.PushBack("thread", event.getThreadName());
 
@@ -147,6 +162,11 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("log", new String(this.encoder.encode(eventObject)));
         }
 
+        Optional.ofNullable(mdcFields).ifPresent(
+                f->event.getMDCPropertyMap().entrySet().stream()
+                        .filter(v->Arrays.stream(f.split(",")).anyMatch(i->i.equals(v.getKey())))
+                        .forEach(map-> item.PushBack(map.getKey(),map.getValue()))
+        );
         try {
             producer.send(projectConfig.getProject(), logStore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
                     projectConfig.getProject(), logStore, topic, source, logItems));
@@ -344,5 +364,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setEncoder(Encoder<E> encoder) {
         this.encoder = encoder;
+    }
+
+    public void setMdcFields(String mdcFields) {
+        this.mdcFields = mdcFields;
     }
 }
