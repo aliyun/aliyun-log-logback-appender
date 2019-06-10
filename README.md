@@ -78,7 +78,7 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
 
     <!-- Configure sls -->
     <project>your project</project>
-    <logStore>your logStore</logstore>
+    <logStore>your logStore</logStore>
     <!-- Required parameters(end) -->
 
     <!-- Optional parameters -->
