@@ -45,7 +45,7 @@
 
         <!-- sls 项目配置 -->
         <project>test-proj</project>
-        <logstore>store2</logstore>
+        <logStore>store2</logStore>
         <!--必选项 (end)-->
 
         <!-- 可选项 -->
