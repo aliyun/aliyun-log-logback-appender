@@ -190,6 +190,13 @@ timeZone = UTC
 
 ## 常见问题
 
+**Q**：在debug模式下，大量打印十六进制信息，程序异常退出？
+
+**A**：在configuration标签中加入：
+```
+<logger name="org.apache.http.impl.conn.Wire" level="WARN" />
+```
+
 **Q**：是否支持自定义 log 格式？
 
 **A**：在 0.1.12 及以上版本新增了 log 字段。您可以通过在 encoder 中设置 pattern 来自定义 log 格式，例如：

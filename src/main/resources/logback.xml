@@ -93,6 +93,9 @@
     <!-- 可用来获取StatusManager中的状态 -->
     <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
 
+    <!-- 解决debug模式下循环发送的问题 -->
+    <logger name="org.apache.http.impl.conn.Wire" level="WARN" />
+
     <root>
         <level value="DEBUG"/>
         <appender-ref ref="loghubAppender1"/>
