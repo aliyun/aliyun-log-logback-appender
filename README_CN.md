@@ -190,6 +190,10 @@ timeZone = UTC
 
 ## 常见问题
 
+**Q**：使用Pandora Boot+Spring Boot 启动异常退出？
+
+**A**：将logback.xml 改成 logback-spring.xml
+
 **Q**：在debug模式下，大量打印十六进制信息，程序异常退出？
 
 **A**：在configuration标签中加入：
