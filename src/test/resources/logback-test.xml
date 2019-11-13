@@ -50,9 +50,7 @@
     </appender>
 
     <!-- 解决debug模式下循环发送的问题 -->
-    <configuration>
-        <logger name="org.apache.http.impl.conn.Wire" level="WARN" />
-    </configuration>
+    <logger name="org.apache.http.impl.conn.Wire" level="WARN" />
 
     <root>
         <level value="WARN"/>
