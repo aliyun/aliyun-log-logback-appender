@@ -11,7 +11,6 @@ import com.aliyun.openservices.aliyun.log.producer.LogProducer;
 import com.aliyun.openservices.aliyun.log.producer.Producer;
 import com.aliyun.openservices.aliyun.log.producer.ProducerConfig;
 import com.aliyun.openservices.aliyun.log.producer.ProjectConfig;
-import com.aliyun.openservices.aliyun.log.producer.ProjectConfigs;
 import com.aliyun.openservices.aliyun.log.producer.errors.ProducerException;
 import com.aliyun.openservices.log.common.LogItem;
 import org.joda.time.DateTime;
@@ -48,7 +47,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     protected Encoder<E> encoder;
 
-    protected ProducerConfig producerConfig = new ProducerConfig(new ProjectConfigs());
+    protected ProducerConfig producerConfig = new ProducerConfig();
     protected ProjectConfig projectConfig;
 
     protected Producer producer;
@@ -85,8 +84,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public Producer createProducer() {
         projectConfig = buildProjectConfig();
-        producerConfig.getProjectConfigs().put(projectConfig);
-        return new LogProducer(producerConfig);
+        Producer producer = new LogProducer(producerConfig);
+        producer.putProjectConfig(projectConfig);
+        return producer;
     }
 
     private ProjectConfig buildProjectConfig() {
