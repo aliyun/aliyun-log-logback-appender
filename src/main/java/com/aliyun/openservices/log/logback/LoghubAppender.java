@@ -75,7 +75,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     private void doStart() {
         try {
             formatter = DateTimeFormat.forPattern(timeFormat).withZone(DateTimeZone.forID(timeZone));
-        }catch (Throwable e){
+        }catch (NoClassDefFoundError e){
             formatter1 = java.time.format.DateTimeFormatter.ofPattern(timeFormat).withZone(ZoneId.of(timeZone));
         }
         producer = createProducer();
