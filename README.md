@@ -41,7 +41,7 @@ Field Specifications:
 
 ## Supported Version
 * logback 1.2.3
-* aliyun-log-producer 0.2.0
+* aliyun-log-producer 0.3.8
 * protobuf-java 2.5.0
 
 
@@ -58,7 +58,7 @@ Field Specifications:
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
 </dependency>
 ```
 

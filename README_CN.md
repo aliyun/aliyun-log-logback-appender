@@ -41,7 +41,7 @@ __topic__: yyy
 
 ## 版本支持
 * logback 1.2.3
-* log-loghub-producer 0.2.0
+* log-loghub-producer 0.3.8
 * protobuf-java 2.5.0
 
 
@@ -58,7 +58,7 @@ __topic__: yyy
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.17</version>
+    <version>0.1.18</version>
 </dependency>
 ```
 
