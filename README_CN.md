@@ -87,14 +87,14 @@ __topic__: yyy
 
     <!-- 可选项 详见 '参数说明'-->
     <totalSizeInBytes>104857600</totalSizeInBytes>
-    <maxBlockMs>60000</maxBlockMs>
+    <maxBlockMs>0</maxBlockMs>
     <ioThreadCount>8</ioThreadCount>
     <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
     <batchCountThreshold>4096</batchCountThreshold>
     <lingerMs>2000</lingerMs>
     <retries>10</retries>
     <baseRetryBackoffMs>100</baseRetryBackoffMs>
-    <maxRetryBackoffMs>100</maxRetryBackoffMs>
+    <maxRetryBackoffMs>50000</maxRetryBackoffMs>
     
     <!-- 可选项 通过配置 encoder 的 pattern 自定义 log 的格式 -->
     <encoder>
@@ -132,8 +132,8 @@ accessKeySecret = [your accessKeySecret]
 
 #单个 producer 实例能缓存的日志大小上限，默认为 100MB。
 totalSizeInBytes=104857600
-#如果 producer 可用空间不足，调用者在 send 方法上的最大阻塞时间，默认为 60 秒。
-maxBlockMs=60
+#如果 producer 可用空间不足，调用者在 send 方法上的最大阻塞时间，默认为 60 秒。为了不阻塞打印日志的线程，强烈建议将该值设置成 0。
+maxBlockMs=0
 #执行日志发送任务的线程池大小，默认为可用处理器个数。
 ioThreadCount=8
 #当一个 ProducerBatch 中缓存的日志大小大于等于 batchSizeThresholdInBytes 时，该 batch 将被发送，默认为 512 KB，最大可设置成 5MB。
@@ -151,7 +151,7 @@ maxReservedAttempts=11
 #Producer 采样指数退避算法，第 N 次重试的计划等待时间为 baseRetryBackoffMs * 2^(N-1)。
 baseRetryBackoffMs=100
 #重试的最大退避时间，默认为 50 秒。
-maxRetryBackoffMs=100
+maxRetryBackoffMs=50000
 
 #指定日志主题，默认为 ""，可选参数
 topic = [your topic]

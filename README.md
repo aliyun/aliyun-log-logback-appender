@@ -87,14 +87,14 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
 
     <!-- Optional parameters -->
     <totalSizeInBytes>104857600</totalSizeInBytes>
-    <maxBlockMs>60000</maxBlockMs>
+    <maxBlockMs>0</maxBlockMs>
     <ioThreadCount>8</ioThreadCount>
     <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
     <batchCountThreshold>4096</batchCountThreshold>
     <lingerMs>2000</lingerMs>
     <retries>10</retries>
     <baseRetryBackoffMs>100</baseRetryBackoffMs>
-    <maxRetryBackoffMs>100</maxRetryBackoffMs>
+    <maxRetryBackoffMs>50000</maxRetryBackoffMs>
     
     <!-- Optional parameters -->
     <encoder>
@@ -131,8 +131,8 @@ accessKeySecret = [your accessKeySecret]
 
 # The upper limit log size that a single producer instance can hold, default is 100MB.
 totalSizeInBytes=104857600
-# If the producer has insufficient free space, the caller's maximum blocking time on the send method, defaults is 60 seconds.
-maxBlockMs=60
+# If the producer has insufficient free space, the caller's maximum blocking time on the send method, defaults is 60 seconds. In order not to block the log printing thread, it is strongly recommended to set this value to 0.
+maxBlockMs=0
 # The thread pool size for executing log sending tasks, defaults is the number of processors available.
 ioThreadCount=8
 # When the size of the cached log in a Producer Batch is greater than or equal batchSizeThresholdInBytes, the batch will be send, default is 512KB, maximum can be set to 5MB.
@@ -146,7 +146,7 @@ retries=10
 # The backoff time for the first retry, default 100 milliseconds.
 baseRetryBackoffMs=100
 # The maximum backoff time for retries, default is 50 seconds.
-maxRetryBackoffMs=100
+maxRetryBackoffMs=50000
 
 # Specify the topic of your log, default is "", optional
 topic = [your topic]

@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.aliyun.openservices</groupId>
             <artifactId>aliyun-log-producer</artifactId>
-            <version>0.3.8</version>
+            <version>0.3.9</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

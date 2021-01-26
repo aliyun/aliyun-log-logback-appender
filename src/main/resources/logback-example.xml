@@ -54,14 +54,14 @@
 
         <!-- 可选项 详见 '参数说明'-->
         <totalSizeInBytes>104857600</totalSizeInBytes>
-        <maxBlockMs>60000</maxBlockMs>
+        <maxBlockMs>0</maxBlockMs>
         <ioThreadCount>8</ioThreadCount>
         <batchSizeThresholdInBytes>524288</batchSizeThresholdInBytes>
         <batchCountThreshold>4096</batchCountThreshold>
         <lingerMs>2000</lingerMs>
         <retries>10</retries>
         <baseRetryBackoffMs>100</baseRetryBackoffMs>
-        <maxRetryBackoffMs>100</maxRetryBackoffMs>
+        <maxRetryBackoffMs>50000</maxRetryBackoffMs>
 
         <!-- 可选项 通过配置 encoder 的 pattern 自定义 log 的格式 -->
         <encoder>
