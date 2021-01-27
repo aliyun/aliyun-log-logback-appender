@@ -106,10 +106,6 @@ __topic__: yyy
     <!-- 可选项 设置 time 字段呈现的时区 -->
     <timeZone>UTC</timeZone>
   </appender>
-
-  <!-- 可用来获取StatusManager中的状态
-  <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
-  -->
 ```
 **注意**：
 + 为了防止进程退出时，LoghubAppender缓存在内存中的少量数据丢失，请记得加上`DelayingShutdownHook`标签。
