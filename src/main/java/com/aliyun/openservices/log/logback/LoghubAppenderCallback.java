@@ -36,15 +36,5 @@ public class LoghubAppenderCallback<E> implements Callback {
 
     @Override
     public void onCompletion(Result result) {
-        if (!result.isSuccessful()) {
-            loghubAppender.addError(
-                    "Failed to send log, project=" + project
-                            + ", logStore=" + logstore
-                            + ", topic=" + topic
-                            + ", source=" + source
-                            + ", logItem=" + logItems
-                            + ", errorCode=" + result.getErrorCode()
-                            + ", errorMessage=" + result.getErrorMessage());
-        }
     }
 }
