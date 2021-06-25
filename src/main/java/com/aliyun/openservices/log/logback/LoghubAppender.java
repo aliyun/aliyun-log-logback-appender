@@ -145,7 +145,12 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
         StackTraceElement[] caller = event.getCallerData();
         if (caller != null && caller.length > 0) {
-            item.PushBack("location", caller[0].toString());
+            for (StackTraceElement stackTraceElement : caller) {
+                if(event.getLoggerName().equals(stackTraceElement.getClassName())){
+                    item.PushBack("location", stackTraceElement.toString());
+                    break;
+                }
+            }
         }
 
         String message = event.getFormattedMessage();
