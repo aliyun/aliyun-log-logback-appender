@@ -63,6 +63,8 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     protected java.time.format.DateTimeFormatter formatter1;
     private String mdcFields;
 
+    protected int maxThrowable = 500;
+
     @Override
     public void start() {
         try {
@@ -151,11 +153,25 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         String message = event.getFormattedMessage();
         item.PushBack("message", message);
 
-        IThrowableProxy iThrowableProxy = event.getThrowableProxy();
-        if (iThrowableProxy != null) {
-            String throwable = getExceptionInfo(iThrowableProxy);
-            throwable += fullDump(event.getThrowableProxy().getStackTraceElementProxyArray());
-            item.PushBack("throwable", throwable);
+        IThrowableProxy throwableProxy = event.getThrowableProxy();
+        if (throwableProxy != null) {
+            StringBuilder throwable = new StringBuilder(this.getExceptionInfo(throwableProxy));
+
+            do {
+                throwable.append(this.fullDump(throwableProxy.getStackTraceElementProxyArray()));
+                throwableProxy = throwableProxy.getCause();
+                if (throwableProxy != null) {
+                    throwable.append("\n\nCaused by:")
+                            .append(this.getExceptionInfo(throwableProxy));
+                }
+            } while (throwableProxy != null);
+            String throwableSub;
+            if (throwable.length() > maxThrowable) {
+                throwableSub = throwable.substring(0, maxThrowable);
+            } else {
+                throwableSub = throwable.toString();
+            }
+            item.PushBack("throwable", throwableSub);
         }
 
         if (this.encoder != null) {
@@ -229,6 +245,14 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setTimeZone(String timeZone) {
         this.timeZone = timeZone;
+    }
+
+    public int getMaxThrowable() {
+        return maxThrowable;
+    }
+
+    public void setMaxThrowable(int maxThrowable) {
+        this.maxThrowable = maxThrowable;
     }
 
     // **** ==- ProjectConfig -== **********************

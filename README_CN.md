@@ -41,7 +41,7 @@ __topic__: yyy
 
 ## 版本支持
 * logback 1.2.3
-* log-loghub-producer 0.3.8
+* aliyun-log-producer 0.3.8
 * protobuf-java 2.5.0
 
 
@@ -106,10 +106,6 @@ __topic__: yyy
     <!-- 可选项 设置 time 字段呈现的时区 -->
     <timeZone>UTC</timeZone>
   </appender>
-
-  <!-- 可用来获取StatusManager中的状态
-  <statusListener class="ch.qos.logback.core.status.OnConsoleStatusListener"/>
-  -->
 ```
 **注意**：
 + 为了防止进程退出时，LoghubAppender缓存在内存中的少量数据丢失，请记得加上`DelayingShutdownHook`标签。
@@ -251,6 +247,11 @@ log:  2018-07-15 21:12:29,682 INFO [main] TestAppender: info message.
 **Q**：如果想设置 `time` 字段的时区为东八区或其他时区，该如何指定 `timeZone` 的取值？
 
 **A**：当您将 `timeZone` 指定为 `Asia/Shanghai` 时，`time` 字段的时区将为东八区。timeZone 字段可能的取值请参考 [java-util-timezone](http://tutorials.jenkov.com/java-date-time/java-util-timezone.html)。
+
+**Q**：为什么程序在运行时会抛出`java.lang.InterruptedException`？
+
+**A**：aliyun-log-logback-appender 会调用 [Producer.send()](https://github.com/aliyun/aliyun-log-java-producer/blob/master/src/main/java/com/aliyun/openservices/aliyun/log/producer/Producer.java#L16) 方法发送数据。执行 send() 方法的线程如果被中断了，如调用了 Thread.interrupted() 方法，就会抛出这样的异常。
+调用  [Producer.send()](https://github.com/aliyun/aliyun-log-java-producer/blob/master/src/main/java/com/aliyun/openservices/aliyun/log/producer/Producer.java#L16) 方法所属的线程和您调用 LOGGER.info() 打印日志的线程是相同的线程，请检查您的程序在何时会调用 Thread.interrupted()  方法。
 
 ## 贡献者
 [@lionbule](https://github.com/lionbule) [@zzboy](https://github.com/zzboy) 对项目作了很大贡献。
