@@ -35,6 +35,7 @@
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg</pattern>
         </encoder>
+        <!-- in the format of "KEY1,KEY2,KEY3" or "*" to match all keys -->
         <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
     </appender>
 
