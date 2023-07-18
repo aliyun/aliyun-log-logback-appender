@@ -179,13 +179,13 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
 
         // mdcFields can be "*" or format of "fieldA,FieldB,fieldC"
-        if(mdcFields != null && mdcFields.trim().equals("*")) { // "*" matches all fields, add all fields to item
+        if (mdcFields != null && mdcFields.trim().equals("*")) { // "*" matches all fields, add all fields to item
             event.getMDCPropertyMap().entrySet().forEach(e -> item.PushBack(e.getKey(), e.getValue()));
         } else {
             Optional.ofNullable(mdcFields).ifPresent(
                     f -> event.getMDCPropertyMap().entrySet().stream()
-                            .filter(v -> Arrays.stream(f.split(",")).anyMatch(i->i.equals(v.getKey())))
-                            .forEach(map-> item.PushBack(map.getKey(),map.getValue()))
+                            .filter(v -> Arrays.stream(f.split(",")).anyMatch(i -> i.equals(v.getKey())))
+                            .forEach(map -> item.PushBack(map.getKey(), map.getValue()))
             );
         }
 
