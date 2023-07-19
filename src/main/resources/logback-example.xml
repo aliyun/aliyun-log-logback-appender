@@ -78,7 +78,7 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-
+        <!-- in the format of "KEY1,KEY2,KEY3" or "*" to match all keys -->
         <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
     </appender>
 

@@ -178,11 +178,18 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("log", new String(this.encoder.encode(eventObject)));
         }
 
-        Optional.ofNullable(mdcFields).ifPresent(
-                f->event.getMDCPropertyMap().entrySet().stream()
-                        .filter(v->Arrays.stream(f.split(",")).anyMatch(i->i.equals(v.getKey())))
-                        .forEach(map-> item.PushBack(map.getKey(),map.getValue()))
-        );
+        // mdcFields can be "*" or format of "fieldA,FieldB,fieldC"
+        if (mdcFields != null && mdcFields.trim().equals("*")) { // "*" matches all fields, add all fields to item
+            event.getMDCPropertyMap().entrySet().forEach(e -> item.PushBack(e.getKey(), e.getValue()));
+        } else {
+            Optional.ofNullable(mdcFields).ifPresent(
+                    f -> event.getMDCPropertyMap().entrySet().stream()
+                            .filter(v -> Arrays.stream(f.split(",")).anyMatch(i -> i.equals(v.getKey())))
+                            .forEach(map -> item.PushBack(map.getKey(), map.getValue()))
+            );
+        }
+
+
         try {
             producer.send(projectConfig.getProject(), logStore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
                     projectConfig.getProject(), logStore, topic, source, logItems));
