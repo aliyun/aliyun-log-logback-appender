@@ -9,7 +9,7 @@
 
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.21</version>
+    <version>0.1.22</version>
     <packaging>jar</packaging>
 
     <name>aliyun log logback appender</name>
