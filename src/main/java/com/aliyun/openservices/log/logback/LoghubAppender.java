@@ -13,13 +13,10 @@ import com.aliyun.openservices.aliyun.log.producer.ProducerConfig;
 import com.aliyun.openservices.aliyun.log.producer.ProjectConfig;
 import com.aliyun.openservices.aliyun.log.producer.errors.ProducerException;
 import com.aliyun.openservices.log.common.LogItem;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 
 import java.time.Instant;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -58,9 +55,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     protected String timeZone = "UTC";
     protected String timeFormat = "yyyy-MM-dd'T'HH:mmZ";
-    protected DateTimeFormatter formatter;
-
-    protected java.time.format.DateTimeFormatter formatter1;
+    protected DateTimeFormatter formatter = DateTimeFormatter.ofPattern(timeFormat).withZone(ZoneId.of(timeZone));
     private String mdcFields;
 
     protected int maxThrowable = 500;
@@ -75,11 +70,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     }
 
     private void doStart() {
-        try {
-            formatter = DateTimeFormat.forPattern(timeFormat).withZone(DateTimeZone.forID(timeZone));
-        }catch (Exception e){
-            formatter1 = java.time.format.DateTimeFormatter.ofPattern(timeFormat).withZone(ZoneId.of(timeZone));
-        }
         producer = createProducer();
         super.start();
     }
@@ -134,13 +124,8 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         logItems.add(item);
         item.SetTime((int) (event.getTimeStamp() / 1000));
 
-        if(formatter!=null){
-            DateTime dateTime = new DateTime(event.getTimeStamp());
-            item.PushBack("time", dateTime.toString(formatter));
-        }else {
-            Instant instant = Instant.ofEpochMilli(event.getTimeStamp());
-            item.PushBack("time", formatter1.format(instant));
-        }
+        Instant instant = Instant.ofEpochMilli(event.getTimeStamp());
+        item.PushBack("time", formatter.format(instant));
 
         item.PushBack("level", event.getLevel().toString());
         item.PushBack("thread", event.getThreadName());
