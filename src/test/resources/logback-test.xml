@@ -37,6 +37,7 @@
         </encoder>
         <!-- in the format of "KEY1,KEY2,KEY3" or "*" to match all keys -->
         <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
+        <!--        <skipAppendLocation>false</skipAppendLocation>-->
     </appender>
 
     <!-- 可用来获取StatusManager中的状态
