@@ -47,6 +47,8 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     protected Encoder<E> encoder;
 
+    private boolean skipAppendLocation = false;
+
     protected ProducerConfig producerConfig = new ProducerConfig();
     protected ProjectConfig projectConfig;
 
@@ -145,9 +147,11 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         item.PushBack("level", event.getLevel().toString());
         item.PushBack("thread", event.getThreadName());
 
-        StackTraceElement[] caller = event.getCallerData();
-        if (caller != null && caller.length > 0) {
-            item.PushBack("location", caller[0].toString());
+        if (!this.skipAppendLocation) {
+            StackTraceElement[] caller = event.getCallerData();
+            if (caller != null && caller.length > 0) {
+                item.PushBack("location", caller[0].toString());
+            }
         }
 
         String message = event.getFormattedMessage();
@@ -393,5 +397,13 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setMdcFields(String mdcFields) {
         this.mdcFields = mdcFields;
+    }
+
+    public boolean getSkipAppendLocation() {
+        return this.skipAppendLocation;
+    }
+
+    public void setSkipAppendLocation(boolean skipAppendLocation) {
+        this.skipAppendLocation = skipAppendLocation;
     }
 }

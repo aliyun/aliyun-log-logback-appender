@@ -23,7 +23,7 @@ __topic__: yyy
 ```
 Field Specifications:
 + `level` stands for log level
-+ `location` is logs's output position
++ `location` is logs's output position, can be disabled by configuration
 + `message` is the content of the log
 + `throwable` is exception of the log (this field will appear only if the exception is recorded)
 + `thread` stands for thread name
@@ -105,6 +105,8 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
     <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
     <!--  Optional parameters -->
     <timeZone>UTC</timeZone>
+    <!--  Optional parameters -->
+    <skipAppendLocation>false</skipAppendLocation>
   </appender>
 
   <!-- This listener will print the status in StatusManager to console
@@ -159,6 +161,8 @@ timeFormat = yyyy-MM-dd'T'HH:mmZ
 
 # Specify timezone of the field time, default is UTC, optional
 timeZone = UTC
+# Whether to skip recording the Location field, defaults to false, set it true if you want to reduce the decrease of performance
+skipAppendLocation = false
 ```
 
 ## Sample Code
