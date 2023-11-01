@@ -106,7 +106,7 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
     <!--  Optional parameters -->
     <timeZone>UTC</timeZone>
     <!--  Optional parameters -->
-    <skipAppendLocation>false</skipAppendLocation>
+    <includeLocation>true</includeLocation>
   </appender>
 
   <!-- This listener will print the status in StatusManager to console
@@ -161,8 +161,8 @@ timeFormat = yyyy-MM-dd'T'HH:mmZ
 
 # Specify timezone of the field time, default is UTC, optional
 timeZone = UTC
-# Whether to skip recording the Location field, defaults to false, set it true if you want to reduce the decrease of performance
-skipAppendLocation = false
+# Whether to record the Location field, defaults to true, set it false if performance-sensitive
+includeLocation = true
 ```
 
 ## Sample Code

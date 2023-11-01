@@ -105,8 +105,8 @@ __topic__: yyy
     <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
     <!-- 可选项 设置 time 字段呈现的时区 -->
     <timeZone>UTC</timeZone>
-    <!-- 可选项 设置是否要跳过添加 Location 字段 -->
-    <skipAppendLocation>false</skipAppendLocation>
+    <!-- 可选项 设置是否要添加 Location 字段（日志打印位置），默认为 true -->
+    <includeLocation>true</includeLocation>
   </appender>
 ```
 **注意**：
@@ -162,8 +162,8 @@ timeFormat = yyyy-MM-dd'T'HH:mmZ
 
 #输出到日志服务的时间的时区，默认是 UTC，可选参数（如果希望 time 字段的时区为东八区，可将该值设定为 Asia/Shanghai）
 timeZone = UTC
-#是否要跳过记录 Location 字段，默认为 false，如果希望减少该选项对性能的影响，可以设为 true
-skipAppendLocation = false
+#是否要记录 Location 字段（日志打印位置），默认为 true，如果希望减少该选项对性能的影响，可以设为 false
+includeLocation = true
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 

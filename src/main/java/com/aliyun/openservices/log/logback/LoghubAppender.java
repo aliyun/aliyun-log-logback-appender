@@ -1,5 +1,24 @@
 package com.aliyun.openservices.log.logback;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
+
+import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+
+import com.aliyun.openservices.aliyun.log.producer.LogProducer;
+import com.aliyun.openservices.aliyun.log.producer.Producer;
+import com.aliyun.openservices.aliyun.log.producer.ProducerConfig;
+import com.aliyun.openservices.aliyun.log.producer.ProjectConfig;
+import com.aliyun.openservices.aliyun.log.producer.errors.ProducerException;
+import com.aliyun.openservices.log.common.LogItem;
+
 import ch.qos.logback.classic.spi.IThrowableProxy;
 import ch.qos.logback.classic.spi.LoggingEvent;
 import ch.qos.logback.classic.spi.StackTraceElementProxy;
@@ -7,20 +26,6 @@ import ch.qos.logback.classic.spi.ThrowableProxyUtil;
 import ch.qos.logback.core.CoreConstants;
 import ch.qos.logback.core.UnsynchronizedAppenderBase;
 import ch.qos.logback.core.encoder.Encoder;
-import com.aliyun.openservices.aliyun.log.producer.LogProducer;
-import com.aliyun.openservices.aliyun.log.producer.Producer;
-import com.aliyun.openservices.aliyun.log.producer.ProducerConfig;
-import com.aliyun.openservices.aliyun.log.producer.ProjectConfig;
-import com.aliyun.openservices.aliyun.log.producer.errors.ProducerException;
-import com.aliyun.openservices.log.common.LogItem;
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
-import java.time.Instant;
-import java.time.ZoneId;
-import java.util.*;
 
 /**
  * ProducerConfig: Default value
@@ -47,7 +52,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     protected Encoder<E> encoder;
 
-    private boolean skipAppendLocation = false;
+    private boolean includeLocation = true;
 
     protected ProducerConfig producerConfig = new ProducerConfig();
     protected ProjectConfig projectConfig;
@@ -147,7 +152,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         item.PushBack("level", event.getLevel().toString());
         item.PushBack("thread", event.getThreadName());
 
-        if (!this.skipAppendLocation) {
+        if (this.includeLocation) {
             StackTraceElement[] caller = event.getCallerData();
             if (caller != null && caller.length > 0) {
                 item.PushBack("location", caller[0].toString());
@@ -399,11 +404,11 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         this.mdcFields = mdcFields;
     }
 
-    public boolean getSkipAppendLocation() {
-        return this.skipAppendLocation;
+    public boolean getIncludeLocation() {
+        return this.includeLocation;
     }
 
-    public void setSkipAppendLocation(boolean skipAppendLocation) {
-        this.skipAppendLocation = skipAppendLocation;
+    public void setIncludeLocation(boolean includeLocation) {
+        this.includeLocation = includeLocation;
     }
 }
