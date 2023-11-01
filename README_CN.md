@@ -22,7 +22,7 @@ __topic__: yyy
 ```
 其中：
 + level 日志级别。
-+ location 日志打印语句的代码位置。
++ location 日志打印语句的代码位置，可以通过配置关闭此选项。
 + message 日志内容。
 + throwable 日志异常信息（只有记录了异常信息，这个字段才会出现）。
 + thread 线程名称。
@@ -105,6 +105,8 @@ __topic__: yyy
     <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
     <!-- 可选项 设置 time 字段呈现的时区 -->
     <timeZone>UTC</timeZone>
+    <!-- 可选项 设置是否要添加 Location 字段（日志打印位置），默认为 true -->
+    <includeLocation>true</includeLocation>
   </appender>
 ```
 **注意**：
@@ -160,6 +162,8 @@ timeFormat = yyyy-MM-dd'T'HH:mmZ
 
 #输出到日志服务的时间的时区，默认是 UTC，可选参数（如果希望 time 字段的时区为东八区，可将该值设定为 Asia/Shanghai）
 timeZone = UTC
+#是否要记录 Location 字段（日志打印位置），默认为 true，如果希望减少该选项对性能的影响，可以设为 false
+includeLocation = true
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 
