@@ -107,6 +107,8 @@ __topic__: yyy
     <timeZone>UTC</timeZone>
     <!-- 可选项 设置是否要添加 Location 字段（日志打印位置），默认为 true -->
     <includeLocation>true</includeLocation>
+    <!-- 可选项 当 encoder 不为空时，是否要包含 message 字段，默认为 true -->
+    <includeMessage>true</includeMessage>
   </appender>
 ```
 **注意**：
@@ -164,6 +166,8 @@ timeFormat = yyyy-MM-dd'T'HH:mmZ
 timeZone = UTC
 #是否要记录 Location 字段（日志打印位置），默认为 true，如果希望减少该选项对性能的影响，可以设为 false
 includeLocation = true
+#当 encoder 不为空时，是否要包含 message 字段，默认为 true
+includeMessage = true
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 

@@ -54,6 +54,8 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     private boolean includeLocation = true;
 
+    private boolean includeMessage = true;
+
     protected ProducerConfig producerConfig = new ProducerConfig();
     protected ProjectConfig projectConfig;
 
@@ -159,8 +161,10 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             }
         }
 
-        String message = event.getFormattedMessage();
-        item.PushBack("message", message);
+        if (this.encoder == null || this.includeMessage) {
+            String message = event.getFormattedMessage();
+            item.PushBack("message", message);
+        }
 
         IThrowableProxy throwableProxy = event.getThrowableProxy();
         if (throwableProxy != null) {
@@ -410,5 +414,13 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setIncludeLocation(boolean includeLocation) {
         this.includeLocation = includeLocation;
+    }
+
+    public boolean getIncludeMessage() {
+        return this.includeMessage;
+    }
+
+    public void setIncludeMessage(boolean includeMessage) {
+        this.includeMessage = includeMessage;
     }
 }

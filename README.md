@@ -107,6 +107,8 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
     <timeZone>UTC</timeZone>
     <!--  Optional parameters -->
     <includeLocation>true</includeLocation>
+    <!--  Optional parameters -->
+    <includeMessage>true</includeMessage>
   </appender>
 
   <!-- This listener will print the status in StatusManager to console
@@ -163,6 +165,8 @@ timeFormat = yyyy-MM-dd'T'HH:mmZ
 timeZone = UTC
 # Whether to record the Location field, defaults to true, set it false if performance-sensitive
 includeLocation = true
+# Whether to include field message when encoder exists, defaults to true.
+includeMessage = true
 ```
 
 ## Sample Code

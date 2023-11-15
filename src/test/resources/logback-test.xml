@@ -38,6 +38,9 @@
         <!-- in the format of "KEY1,KEY2,KEY3" or "*" to match all keys -->
         <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
         <!--        <includeLocation>false</includeLocation>-->
+        <!-- whether include field message when encoder exists, defaults to true.
+            当 encoder 不为空时，是否要包含 message 字段，默认为 true。 -->
+        <includeMessage>true</includeMessage>
     </appender>
 
     <!-- 可用来获取StatusManager中的状态
