@@ -74,6 +74,9 @@
         <timeZone>Asia/Shanghai</timeZone>
         <!-- 可选项 设置是否要添加 Location 字段（日志打印位置），默认为 true -->
         <includeLocation>true</includeLocation>
+        <!-- 可选项 当 encoder 不为空时，是否要包含 message 字段，默认为 true。 
+            Optional Whether to include field message when encoder exists, defaults to true.-->
+        <includeMessage>true</includeMessage>
 
         <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO级别的日志 -->
             <level>INFO</level>

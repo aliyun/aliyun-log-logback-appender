@@ -54,6 +54,8 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     private boolean includeLocation = true;
 
+    private boolean includeMessage = true;
+
     protected ProducerConfig producerConfig = new ProducerConfig();
     protected ProjectConfig projectConfig;
 
@@ -159,8 +161,13 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             }
         }
 
-        String message = event.getFormattedMessage();
-        item.PushBack("message", message);
+        if (this.encoder == null || this.includeMessage) {
+            String message = event.getFormattedMessage();
+            item.PushBack("message", message);    
+        }
+        if (this.encoder != null) {
+            item.PushBack("log", new String(this.encoder.encode(eventObject)));
+        }
 
         IThrowableProxy throwableProxy = event.getThrowableProxy();
         if (throwableProxy != null) {
@@ -181,10 +188,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
                 throwableSub = throwable.toString();
             }
             item.PushBack("throwable", throwableSub);
-        }
-
-        if (this.encoder != null) {
-            item.PushBack("log", new String(this.encoder.encode(eventObject)));
         }
 
         // mdcFields can be "*" or format of "fieldA,FieldB,fieldC"
@@ -410,5 +413,13 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setIncludeLocation(boolean includeLocation) {
         this.includeLocation = includeLocation;
+    }
+
+    public boolean getIncludeMessage() {
+        return this.includeMessage;
+    }
+
+    public void setIncludeMessage(boolean includeMessage) {
+        this.includeMessage = includeMessage;
     }
 }
