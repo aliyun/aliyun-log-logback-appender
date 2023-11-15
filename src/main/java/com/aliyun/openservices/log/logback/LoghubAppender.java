@@ -163,7 +163,10 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
         if (this.encoder == null || this.includeMessage) {
             String message = event.getFormattedMessage();
-            item.PushBack("message", message);
+            item.PushBack("message", message);    
+        }
+        if (this.encoder != null) {
+            item.PushBack("log", new String(this.encoder.encode(eventObject)));
         }
 
         IThrowableProxy throwableProxy = event.getThrowableProxy();
@@ -185,10 +188,6 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
                 throwableSub = throwable.toString();
             }
             item.PushBack("throwable", throwableSub);
-        }
-
-        if (this.encoder != null) {
-            item.PushBack("log", new String(this.encoder.encode(eventObject)));
         }
 
         // mdcFields can be "*" or format of "fieldA,FieldB,fieldC"
