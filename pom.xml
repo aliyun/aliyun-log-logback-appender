@@ -9,7 +9,7 @@
 
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.24</version>
+    <version>0.1.25-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>aliyun log logback appender</name>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>com.aliyun.openservices</groupId>
             <artifactId>aliyun-log-producer</artifactId>
-            <version>0.3.15</version>
+            <version>0.3.17</version>
         </dependency>
         <dependency>
             <groupId>ch.qos.logback</groupId>

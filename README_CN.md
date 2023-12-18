@@ -171,6 +171,53 @@ includeMessage = true
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 
+### 自定义 CredentialsProvider
+logback-appender 支持自定义的 CredentialsProvider，您可以自行实现 Credentails 的获取接口，以实现自定义的动态轮转 AK、
+无 AK 等需求。  
+
+> 当您配置了自定义 CredentialsProvider后，无需再额外配置 AccessKeyId/AccessKeySecret。   
+
+ 1. 首先您需要先分别定义类实现 CredentialsProviderBuilder 接口与 CredentialsProvider 接口  
+
+```java
+class MyCredentialsProvider implements CredentialsProvider {
+  @Override
+  public synchronized Credentials getCredentials() {
+     // 获取 AK 与缓存 AK 的逻辑
+  }
+  // 构造函数
+  MyCredentialsProvider(String param1, long paramField2) {}
+}
+
+class MyBuilder implements CredentialsProviderBuilder {
+  @Override
+  public CredentialsProvider getCredentialsProvider() {
+     return new MyCredentialsProvider(param1, paramField2);
+  }
+  private String param1;
+  private long paramField2;
+  public void setParam1(String param1) {
+      this.param1 = param1;
+  }
+  public void setParamField2(long paramField2) {
+      this.paramField2 = paramField2;
+  }
+}
+```
+2. 然后在 logback 的 xml 配置文件中填充您的 Builder 的参数，该参数会通过对应的 setter 方法传入到您的 Builder 类中。 
+```xml
+  <appender name="aliyun" class="com.aliyun.openservices.log.logback.LoghubAppender">
+    <credenitalsProviderBuilder class="com.example.MyBuilder">
+        <param1>hello</param1>
+        <paramField2>123</paramField2>
+    </credenitalsProviderBuilder> 
+    <!-- 这里省略其他配置项 -->
+  </appender>
+```
+
+
+
+
 ## 使用实例
 项目中提供了一个名为`com.aliyun.openservices.log.logback.LogbackAppenderExample`的实例，它会加载resources目录下的`logback.xml`文件进行logback配置。
 

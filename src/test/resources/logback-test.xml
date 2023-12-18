@@ -14,6 +14,12 @@
         <logStore>${logStore}</logStore>
         <!--必选项 (end)-->
 
+        <!-- 可选项，自定义 CredenitalsProvider 配置 -->
+<!--        <credenitalsProviderBuilder class="com.aliyun.openservices.log.logback.example.ExampleCredentialsProviderBuilder">-->
+<!--            <accessKeyId></accessKeyId>-->
+<!--            <accessKeySecret></accessKeySecret>-->
+<!--        </credenitalsProviderBuilder>-->
+
         <!-- 可选项 -->
         <topic></topic>
 
