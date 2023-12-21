@@ -58,7 +58,7 @@ Field Specifications:
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.18</version>
+    <version>0.1.25</version>
 </dependency>
 ```
 
@@ -109,6 +109,12 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
     <includeLocation>true</includeLocation>
     <!--  Optional parameters -->
     <includeMessage>true</includeMessage>
+    <!-- Optional parameters -->
+    <!-- See chapter "Custom CredentialsProvider" -->
+    <credentialsProviderBuilder class="com.aliyun.openservices.log.logback.example.ExampleCredentialsProviderBuilder">
+            <accessKeyId>${accessKeyId}</accessKeyId>
+            <accessKeySecret>${accessKeySecret}</accessKeySecret>
+    </credentialsProviderBuilder>
   </appender>
 
   <!-- This listener will print the status in StatusManager to console
@@ -167,6 +173,80 @@ timeZone = UTC
 includeLocation = true
 # Whether to include field message when encoder exists, defaults to true.
 includeMessage = true
+```
+
+## Custom CredentialsProvider
+The logback-appender supports custom `CredentialsProvider`. By implementing the `CredentialsProvider` interface, you can implement advanced features yourself, such as dynamic rotation of AccessKey.  
+
+> Once a `CredentialsProvider` is provided, it's unnecessary to configure parameter for static credentials (AccessKeyId/AccessKeySecret/SecurityToken); the system will use the credentials fetched through the `CredentialsProvider` provided.  
+
+ 1. Defines a class, eg. `MyCredentialsProvider`, and implements the `CredentialsProvider` interface to support the dynamic updates of credentials. Make sure the implementation is thread-safe.
+    - For performance, it is recommended that method `getCredentials` caches credentials and refreshes them before expired. 
+ 
+    ```java
+    class MyCredentialsProvider implements CredentialsProvider {
+        @Override
+        public synchronized Credentials getCredentials() {
+            // fetch credentials and caches credentials
+        }
+        // constructor
+        MyCredentialsProvider(String param1, long paramField2) {}
+    }
+    ```
+
+ 2. Defines a class, eg. `MyBuilder`, and implements the `CredentialsProviderBuilder` interface. 
+    - The method `getCredentialsProvider`  should return a new instance of `CredentialsProvider` for each call.
+    ```java
+    class MyBuilder implements CredentialsProviderBuilder {
+      @Override
+      public CredentialsProvider getCredentialsProvider() {
+         return new MyCredentialsProvider(param1, paramField2);
+      }
+      private String param1;
+      private long paramField2;
+      public void setParam1(String param1) {
+          this.param1 = param1;
+      }
+      public void setParamField2(long paramField2) {
+          this.paramField2 = paramField2;
+      }
+    }
+    ```
+    
+3. Configure logback with xml file, set the class of `credentialsProviderBuilder` with the fully qualified name of your class, eg. `com.example.MyBuilder`, and pass any custom parameters.
+    ```xml
+      <appender name="aliyun" class="com.aliyun.openservices.log.logback.LoghubAppender">
+        <credentialsProviderBuilder class="com.example.MyBuilder">
+            <param1>hello</param1>
+            <paramField2>123</paramField2>
+        </credentialsProviderBuilder> 
+        <!-- Omit other configs -->
+      </appender>
+    ```
+### Custom parameter
+To pass in some custom parameters to the `MyBuilder` class, such as param1, paramField2, define the setter methods setParam1 and setParamField2 in the class first.
+```java
+class MyBuilder implements CredentialsProviderBuilder {
+    private String param1;
+    private long paramField2;
+    public void setParam1(String param1) {
+        this.param1 = param1;
+    }
+    public void setParamField2(long paramField2) {
+        this.paramField2 = paramField2;
+    }
+    // Omit other codes
+}
+```
+Then configure logback with xml file, set the class of `credentialsProviderBuilder` with the fully qualified name of your class, eg. `com.example.MyBuilder`, and fill with custom parameters.
+```xml
+<appender name="aliyun" class="com.aliyun.openservices.log.logback.LoghubAppender">
+    <credentialsProviderBuilder class="com.example.MyBuilder">
+        <param1>hello</param1>
+        <paramField2>123</paramField2>
+    </credentialsProviderBuilder>
+<!--  Omit other configs -->
+</appender>
 ```
 
 ## Sample Code

@@ -58,7 +58,7 @@ __topic__: yyy
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.18</version>
+    <version>0.1.25</version>
 </dependency>
 ```
 
@@ -109,6 +109,12 @@ __topic__: yyy
     <includeLocation>true</includeLocation>
     <!-- 可选项 当 encoder 不为空时，是否要包含 message 字段，默认为 true -->
     <includeMessage>true</includeMessage>
+    <!-- 可选项 可注入自定义的 credentialsProvider，允许用户自行实现 AK 获取逻辑 -->
+    <!-- 参见 "自定义 CredentialsProvider" 一节介绍 -->
+    <credentialsProviderBuilder class="com.aliyun.openservices.log.logback.example.ExampleCredentialsProviderBuilder">
+            <accessKeyId>${accessKeyId}</accessKeyId>
+            <accessKeySecret>${accessKeySecret}</accessKeySecret>
+    </credentialsProviderBuilder>
   </appender>
 ```
 **注意**：
@@ -171,50 +177,82 @@ includeMessage = true
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 
-### 自定义 CredentialsProvider
-logback-appender 支持自定义的 CredentialsProvider，您可以自行实现 Credentails 的获取接口，以实现自定义的动态轮转 AK、
-无 AK 等需求。  
+## 自定义凭证提供者 CredentialsProvider
 
-> 当您配置了自定义 CredentialsProvider后，无需再额外配置 AccessKeyId/AccessKeySecret。   
+logback-appender 支持您自定义凭证提供者 `CredentialsProvider`。通过实现凭证获取接口，您能够灵活地实现访问密钥 (AK) 凭证的动态轮换等高级功能。
 
- 1. 首先您需要先分别定义类实现 CredentialsProviderBuilder 接口与 CredentialsProvider 接口  
+> 一旦启用自定义 `CredentialsProvider` 后，就无需再额外配置静态凭证参数（AccessKeyId/AccessKeySecret/SecurityToken），系统将通过您提供的 `CredentialsProvider` 自动获取 AK 凭证。。   
 
+ 1. 创建一个类（例如 `MyCredentialsProvider`），并实现 `CredentialsProvider` 接口，来支持动态获取 AK 凭证，请确保该实现是线程安全的。 
+
+  > 为了优化性能，建议 `getCredentials` 方法在内部缓存 AK 凭证，并确保在缓存即将过期之前主动刷新。 
+ 
+    ```java
+    class MyCredentialsProvider implements CredentialsProvider {
+        @Override
+        public synchronized Credentials getCredentials() {
+            // 获取 AK 与缓存 AK 的逻辑
+        }
+        // 构造函数
+        MyCredentialsProvider(String param1, long paramField2) {}
+    }
+    ```
+
+ 2. 创建一个类（比如叫 `MyBuilder`），并实现 `CredentialsProviderBuilder` 接口。
+    - `getCredentialsProvider` 方法应该在每次调用时都返回一个新的 `CredentialsProvider` 实例。  
+    ```java
+    class MyBuilder implements CredentialsProviderBuilder {
+      @Override
+      public CredentialsProvider getCredentialsProvider() {
+         return new MyCredentialsProvider(param1, paramField2);
+      }
+      private String param1;
+      private long paramField2;
+      public void setParam1(String param1) {
+          this.param1 = param1;
+      }
+      public void setParamField2(long paramField2) {
+          this.paramField2 = paramField2;
+      }
+    }
+    ```
+    
+3. 在 logback 的配置文件中，设置 `credentialsProviderBuilder` 的 class 属性为您的自定义类的全限定名，例如 `com.example.MyBuilder`，并根据需要添加自定义参数。
+    ```xml
+      <appender name="aliyun" class="com.aliyun.openservices.log.logback.LoghubAppender">
+        <credentialsProviderBuilder class="com.example.MyBuilder">
+            <param1>hello</param1> <!-- 自定义参数 -->
+            <paramField2>123</paramField2> <!-- 自定义参数 -->
+        </credentialsProviderBuilder> 
+        <!-- 这里省略其他配置项 -->
+      </appender>
+    ```
+### 自定义参数传递
+若需向 `MyBuilder` 类提供自定义参数，如 `param1` 或 `paramField2`，您应在该类中定义相应的 setter 方法，例如 `setParam1` 和 `setParamField2`。  
 ```java
-class MyCredentialsProvider implements CredentialsProvider {
-  @Override
-  public synchronized Credentials getCredentials() {
-     // 获取 AK 与缓存 AK 的逻辑
-  }
-  // 构造函数
-  MyCredentialsProvider(String param1, long paramField2) {}
-}
-
 class MyBuilder implements CredentialsProviderBuilder {
-  @Override
-  public CredentialsProvider getCredentialsProvider() {
-     return new MyCredentialsProvider(param1, paramField2);
-  }
-  private String param1;
-  private long paramField2;
-  public void setParam1(String param1) {
-      this.param1 = param1;
-  }
-  public void setParamField2(long paramField2) {
-      this.paramField2 = paramField2;
-  }
+    private String param1;
+    private long paramField2;
+    public void setParam1(String param1) {
+        this.param1 = param1;
+    }
+    public void setParamField2(long paramField2) {
+        this.paramField2 = paramField2;
+    }
+    // 省略其他方法
 }
 ```
-2. 然后在 logback 的 xml 配置文件中填充您的 Builder 的参数，该参数会通过对应的 setter 方法传入到您的 Builder 类中。 
-```xml
-  <appender name="aliyun" class="com.aliyun.openservices.log.logback.LoghubAppender">
-    <credenitalsProviderBuilder class="com.example.MyBuilder">
-        <param1>hello</param1>
-        <paramField2>123</paramField2>
-    </credenitalsProviderBuilder> 
-    <!-- 这里省略其他配置项 -->
-  </appender>
-```
 
+然后在 logback 的配置文件中，`credentialsProviderBuilder` 选项下，为自定义参数配置参数值即可。
+```xml
+<appender name="aliyun" class="com.aliyun.openservices.log.logback.LoghubAppender">
+    <credentialsProviderBuilder class="com.example.MyBuilder">
+        <param1>hello</param1> <!-- 自定义参数 -->
+        <paramField2>123</paramField2> <!-- 自定义参数 -->
+    </credentialsProviderBuilder>
+<!-- 这里省略其他配置项 -->
+</appender>
+```
 
 
 

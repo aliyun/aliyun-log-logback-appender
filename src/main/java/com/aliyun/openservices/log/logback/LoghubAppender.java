@@ -87,7 +87,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
     }
 
-    private void doStart() {
+    private void doStart() throws Exception {
         try {
             formatter = DateTimeFormat.forPattern(timeFormat).withZone(DateTimeZone.forID(timeZone));
         }catch (Exception e){
@@ -97,14 +97,14 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         super.start();
     }
 
-    public Producer createProducer() {
+    public Producer createProducer() throws Exception{
         projectConfig = buildProjectConfig();
         Producer producer = new LogProducer(producerConfig);
         producer.putProjectConfig(projectConfig);
         return producer;
     }
 
-    private ProjectConfig buildProjectConfig() {
+    private ProjectConfig buildProjectConfig() throws Exception{
         if (credentialsProviderBuilder != null) {
             credentialsProvider = credentialsProviderBuilder.getCredentialsProvider();
             return new ProjectConfig(project, endpoint, credentialsProvider, userAgent);

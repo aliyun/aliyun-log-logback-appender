@@ -4,7 +4,8 @@ package com.aliyun.openservices.log.logback;
 import com.aliyun.openservices.log.common.auth.CredentialsProvider;
 
 /**
- *
+ * Customized CredentialsProviderBuilder
+ * <p/>
  * Example:
  * <pre>
  * {@code
@@ -32,6 +33,8 @@ public interface CredentialsProviderBuilder {
      *
      * @return the returned {@link CredentialsProvider} must be thread-safe,
      * and cache credentials to avoid update credentials too frequently.
+     *
+     * @throws Exception if fail to create new CredentialsProvider instance
      */
-    CredentialsProvider getCredentialsProvider();
+    CredentialsProvider getCredentialsProvider() throws Exception;
 }

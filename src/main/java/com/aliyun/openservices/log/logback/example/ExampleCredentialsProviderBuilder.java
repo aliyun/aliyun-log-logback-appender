@@ -19,7 +19,7 @@ public class ExampleCredentialsProviderBuilder implements CredentialsProviderBui
      * and cache credentials to avoid update credentials too frequently.
      */
     @Override
-    public CredentialsProvider getCredentialsProvider() {
+    public CredentialsProvider getCredentialsProvider() throws Exception {
         Credentials credentials =  new DefaultCredentials(accessKeyId, accessKeySecret, securityToken);
         return new StaticCredentialsProvider(credentials);
     }
