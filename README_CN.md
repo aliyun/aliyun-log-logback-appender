@@ -110,7 +110,7 @@ __topic__: yyy
     <!-- 可选项 当 encoder 不为空时，是否要包含 message 字段，默认为 true -->
     <includeMessage>true</includeMessage>
     <!-- 可选项 可注入自定义的 credentialsProvider，允许用户自行实现 AK 获取逻辑 -->
-    <!-- 参见 "自定义 CredentialsProvider" 一节介绍 -->
+    <!-- 参见 "自定义凭证提供者 CredentialsProvider" 一节介绍 -->
     <credentialsProviderBuilder class="com.aliyun.openservices.log.logback.example.ExampleCredentialsProviderBuilder">
             <accessKeyId>${accessKeyId}</accessKeyId>
             <accessKeySecret>${accessKeySecret}</accessKeySecret>
@@ -208,9 +208,11 @@ logback-appender 支持您自定义凭证提供者 `CredentialsProvider`。通�
       }
       private String param1;
       private long paramField2;
+      // 自定义参数 param1
       public void setParam1(String param1) {
           this.param1 = param1;
       }
+      // 自定义参数 paramField2
       public void setParamField2(long paramField2) {
           this.paramField2 = paramField2;
       }
@@ -227,7 +229,8 @@ logback-appender 支持您自定义凭证提供者 `CredentialsProvider`。通�
         <!-- 这里省略其他配置项 -->
       </appender>
     ```
-### 自定义参数传递
+
+### 自定义参数
 若需向 `MyBuilder` 类提供自定义参数，如 `param1` 或 `paramField2`，您应在该类中定义相应的 setter 方法，例如 `setParam1` 和 `setParamField2`。  
 ```java
 class MyBuilder implements CredentialsProviderBuilder {
@@ -250,7 +253,7 @@ class MyBuilder implements CredentialsProviderBuilder {
         <param1>hello</param1> <!-- 自定义参数 -->
         <paramField2>123</paramField2> <!-- 自定义参数 -->
     </credentialsProviderBuilder>
-<!-- 这里省略其他配置项 -->
+    <!-- 这里省略其他配置项 -->
 </appender>
 ```
 
