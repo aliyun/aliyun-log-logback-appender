@@ -48,6 +48,12 @@
         <logStore>store2</logStore>
         <!--必选项 (end)-->
 
+        <!-- 可选项，自定义 CredentialsProvider 配置 -->
+<!--        <credentialsProviderBuilder class="com.aliyun.openservices.log.logback.example.ExampleCredentialsProviderBuilder">-->
+<!--            <accessKeyId>${accessKeyId}</accessKeyId>-->
+<!--            <accessKeySecret>${accessKeySecret}</accessKeySecret>-->
+<!--        </credentialsProviderBuilder>-->
+
         <!-- 可选项 -->
         <topic>topic2</topic>
         <source>source2</source>

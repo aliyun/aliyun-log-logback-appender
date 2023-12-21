@@ -7,6 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import com.aliyun.openservices.log.common.auth.CredentialsProvider;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
@@ -74,6 +75,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     protected int maxThrowable = 500;
 
+    private CredentialsProviderBuilder credentialsProviderBuilder;
+    private CredentialsProvider credentialsProvider;
+
     @Override
     public void start() {
         try {
@@ -83,7 +87,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         }
     }
 
-    private void doStart() {
+    private void doStart() throws Exception {
         try {
             formatter = DateTimeFormat.forPattern(timeFormat).withZone(DateTimeZone.forID(timeZone));
         }catch (Exception e){
@@ -93,14 +97,18 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         super.start();
     }
 
-    public Producer createProducer() {
+    public Producer createProducer() throws Exception{
         projectConfig = buildProjectConfig();
         Producer producer = new LogProducer(producerConfig);
         producer.putProjectConfig(projectConfig);
         return producer;
     }
 
-    private ProjectConfig buildProjectConfig() {
+    private ProjectConfig buildProjectConfig() throws Exception{
+        if (credentialsProviderBuilder != null) {
+            credentialsProvider = credentialsProviderBuilder.getCredentialsProvider();
+            return new ProjectConfig(project, endpoint, credentialsProvider, userAgent);
+        }
         return new ProjectConfig(project, endpoint, accessKeyId, accessKeySecret, null, userAgent);
     }
 
@@ -421,5 +429,9 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setIncludeMessage(boolean includeMessage) {
         this.includeMessage = includeMessage;
+    }
+
+    public void setCredentialsProviderBuilder(CredentialsProviderBuilder builder) {
+        this.credentialsProviderBuilder = builder;
     }
 }
