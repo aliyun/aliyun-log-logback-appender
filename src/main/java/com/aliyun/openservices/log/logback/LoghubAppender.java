@@ -209,12 +209,18 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             );
         }
 
-
-        try {
-            producer.send(projectConfig.getProject(), logStore, topic, source, logItems, new LoghubAppenderCallback<E>(this,
-                    projectConfig.getProject(), logStore, topic, source, logItems));
-        } catch (Exception e) {
-        }
+        long ddlInMs = System.currentTimeMillis() + getMaxBlockMs();
+        do {
+            try {
+                producer.send(projectConfig.getProject(), logStore, topic, source, logItems, new LoghubAppenderCallback<E>(this, projectConfig.getProject(), logStore, topic, source, logItems));
+                break;
+            } catch (InterruptedException e) {
+                continue;
+            } catch (Exception e) {
+                break;
+            }
+        } while (System.currentTimeMillis() < ddlInMs);
+        
     }
 
     public String getTimeFormat() {
