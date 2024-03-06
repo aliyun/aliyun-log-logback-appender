@@ -5,7 +5,6 @@ import com.aliyun.openservices.log.common.auth.CredentialsProvider;
 
 /**
  * Customized CredentialsProviderBuilder
- * <p/>
  * Example:
  * <pre>
  * {@code
