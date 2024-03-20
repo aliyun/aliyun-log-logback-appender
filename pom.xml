@@ -9,7 +9,7 @@
 
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.26</version>
+    <version>0.1.27</version>
     <packaging>jar</packaging>
 
     <name>aliyun log logback appender</name>
@@ -179,6 +179,57 @@
                     <source>8</source>
                     <target>8</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.1.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <relocations>
+                                <relocation>
+                                    <pattern>com.aliyun.openservices.log</pattern>
+                                    <shadedPattern>com.shade.aliyun.openservices.log</shadedPattern>
+                                    <excludes>
+                                        <exclude>com.aliyun.openservices.log.logback</exclude>
+                                        <exclude>com.aliyun.openservices.log.logback.*</exclude>
+                                    </excludes>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.google</pattern>
+                                    <shadedPattern>com.shade.google</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>net.jpountz</pattern>
+                                    <shadedPattern>net.shade.jpountz</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>com.alibaba</pattern>
+                                    <shadedPattern>com.shade.alibaba</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.apache</pattern>
+                                    <shadedPattern>org.shade.apache</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.codehaus</pattern>
+                                    <shadedPattern>org.shade.codehaus</shadedPattern>
+                                </relocation>
+                                <relocation>
+                                    <pattern>org.checkerframework</pattern>
+                                    <shadedPattern>org.shade.checkerframework</shadedPattern>
+                                </relocation>
+                            </relocations>
+                            <shadedClassifierName>jar-with-dependencies</shadedClassifierName>
+                            <shadedArtifactAttached>true</shadedArtifactAttached>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
