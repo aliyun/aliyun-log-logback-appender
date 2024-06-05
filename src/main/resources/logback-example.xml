@@ -91,6 +91,8 @@
         </filter>
         <!-- in the format of "KEY1,KEY2,KEY3" or "*" to match all keys -->
         <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
+        <!-- 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500 -->
+        <maxThrowable>500</maxThrowable>
     </appender>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
