@@ -115,6 +115,8 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
             <accessKeyId>${accessKeyId}</accessKeyId>
             <accessKeySecret>${accessKeySecret}</accessKeySecret>
     </credentialsProviderBuilder>
+    <!-- optional, option for maximum exception stack trace recording length. Exceeding this length will result in truncation. The default value is 500.-->
+    <maxThrowable>500</maxThrowable>
   </appender>
 
   <!-- This listener will print the status in StatusManager to console
@@ -173,6 +175,8 @@ timeZone = UTC
 includeLocation = true
 # Whether to include field message when encoder exists, defaults to true.
 includeMessage = true
+# option for maximum exception stack trace recording length. Exceeding this length will result in truncation. Defaults to 500, optional.
+maxThrowable=500
 ```
 
 ## Custom CredentialsProvider

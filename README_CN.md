@@ -115,6 +115,8 @@ __topic__: yyy
             <accessKeyId>${accessKeyId}</accessKeyId>
             <accessKeySecret>${accessKeySecret}</accessKeySecret>
     </credentialsProviderBuilder>
+    <!-- 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500 -->
+    <maxThrowable>500</maxThrowable>
   </appender>
 ```
 **注意**：
@@ -174,6 +176,8 @@ timeZone = UTC
 includeLocation = true
 #当 encoder 不为空时，是否要包含 message 字段，默认为 true
 includeMessage = true
+# 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500 -->
+maxThrowable=500
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 

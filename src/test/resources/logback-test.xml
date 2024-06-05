@@ -47,6 +47,8 @@
         <!-- whether include field message when encoder exists, defaults to true.
             当 encoder 不为空时，是否要包含 message 字段，默认为 true。 -->
         <includeMessage>true</includeMessage>
+        <!-- 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500 -->
+        <maxThrowable>500</maxThrowable>
     </appender>
 
     <!-- 可用来获取StatusManager中的状态
