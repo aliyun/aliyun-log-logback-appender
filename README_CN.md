@@ -58,7 +58,7 @@ __topic__: yyy
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.25</version>
+    <version>0.1.28</version>
 </dependency>
 ```
 
@@ -178,6 +178,9 @@ includeLocation = true
 includeMessage = true
 # 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500 -->
 maxThrowable=500
+
+# 写入处理器，默认为 ""，可选参数
+processor = [ingest processor]
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 
