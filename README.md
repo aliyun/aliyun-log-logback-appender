@@ -58,7 +58,7 @@ Field Specifications:
 <dependency>
     <groupId>com.aliyun.openservices</groupId>
     <artifactId>aliyun-log-logback-appender</artifactId>
-    <version>0.1.25</version>
+    <version>0.1.28</version>
 </dependency>
 ```
 
@@ -177,6 +177,9 @@ includeLocation = true
 includeMessage = true
 # option for maximum exception stack trace recording length. Exceeding this length will result in truncation. Defaults to 500, optional.
 maxThrowable=500
+
+# Specify ingest processor, default is "", optional
+processor = [ingest processor]
 ```
 
 ## Custom CredentialsProvider

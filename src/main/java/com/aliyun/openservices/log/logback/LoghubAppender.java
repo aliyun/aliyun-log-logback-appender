@@ -72,6 +72,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     protected java.time.format.DateTimeFormatter formatter1;
     private String mdcFields;
+    private String processor;
 
     protected int maxThrowable = 500;
 
@@ -439,5 +440,14 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setCredentialsProviderBuilder(CredentialsProviderBuilder builder) {
         this.credentialsProviderBuilder = builder;
+    }
+
+    public String getProcessor() {
+        return processor;
+    }
+
+    public void setProcessor(String processor) {
+        this.processor = processor;
+        producerConfig.setProcessor(processor);
     }
 }
