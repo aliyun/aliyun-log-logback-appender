@@ -41,6 +41,7 @@ import ch.qos.logback.core.encoder.Encoder;
  */
 public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
+    private static final int MAX_THROWABLE_LENGTH = 5 * 1024 * 1024;
     private String project;
 
     private String endpoint;
@@ -286,7 +287,10 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     }
 
     public void setMaxThrowable(int maxThrowable) {
-        this.maxThrowable = maxThrowable;
+        this.maxThrowable = Math.min(maxThrowable, MAX_THROWABLE_LENGTH);
+        if (this.maxThrowable < 0) {
+            this.maxThrowable = MAX_THROWABLE_LENGTH;
+        }
     }
 
     // **** ==- ProjectConfig -== **********************

@@ -115,7 +115,7 @@ __topic__: yyy
             <accessKeyId>${accessKeyId}</accessKeyId>
             <accessKeySecret>${accessKeySecret}</accessKeySecret>
     </credentialsProviderBuilder>
-    <!-- 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500 -->
+    <!-- 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500，最大值为 5000000，设置成 -1 视作最大值。 -->
     <maxThrowable>500</maxThrowable>
   </appender>
 ```
@@ -176,7 +176,7 @@ timeZone = UTC
 includeLocation = true
 #当 encoder 不为空时，是否要包含 message 字段，默认为 true
 includeMessage = true
-# 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500 -->
+# 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500，最大值为 5000000，设置成 -1 视作最大值。-->
 maxThrowable=500
 
 # 写入处理器，默认为 ""，可选参数
