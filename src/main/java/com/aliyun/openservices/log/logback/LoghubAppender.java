@@ -79,6 +79,10 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     private CredentialsProviderBuilder credentialsProviderBuilder;
     private CredentialsProvider credentialsProvider;
 
+    private String timePrecision;
+
+    private TimePrecision timePrecisionEnum = TimePrecision.SECONDS;
+
     @Override
     public void start() {
         try {
@@ -148,9 +152,11 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
         LoggingEvent event = (LoggingEvent) eventObject;
 
         List<LogItem> logItems = new ArrayList<LogItem>();
-        LogItem item = new LogItem();
+        LogItem item = new LogItem((int) (event.getTimeStamp() / 1000));
         logItems.add(item);
-        item.SetTime((int) (event.getTimeStamp() / 1000));
+        if (TimePrecision.MILLIS.equals(timePrecisionEnum)) {
+            item.SetTimeNsPart((int)((event.getTimeStamp() % 1000) * 1000000));
+        }
 
         if(formatter!=null){
             DateTime dateTime = new DateTime(event.getTimeStamp());
@@ -449,5 +455,26 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
     public void setProcessor(String processor) {
         this.processor = processor;
         producerConfig.setProcessor(processor);
+    }
+
+    public String getTimePrecision() {
+        return timePrecision;
+    }
+
+    public void setTimePrecision(String timePrecision) {
+        this.timePrecision = timePrecision;
+        this.timePrecisionEnum = parseTimePrecision(timePrecision);
+    }
+
+    private enum TimePrecision {
+        SECONDS,
+        MILLIS,
+    }
+
+    private static TimePrecision parseTimePrecision(String resolution) {
+        if ("ms".equals(resolution)) {
+            return TimePrecision.MILLIS;
+        }
+        return TimePrecision.SECONDS;
     }
 }

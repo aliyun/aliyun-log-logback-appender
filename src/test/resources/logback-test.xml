@@ -38,6 +38,9 @@
         <timeFormat>yyyy-MM-dd'T'HH:mmZ</timeFormat>
         <timeZone>GMT+08</timeZone>
 
+        <!-- 可选项 设置上传到 sls 的日志时间精度，支持秒 s 与毫秒 ms，默认为秒 -->
+        <timePrecision>ms</timePrecision>
+
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger - %msg</pattern>
         </encoder>
@@ -64,6 +67,10 @@
 
     <!-- 解决debug模式下循环发送的问题 -->
     <logger name="org.apache.http.impl.conn.Wire" level="WARN" />
+
+     <logger name="com.aliyun.openservices.log" level="WARN">
+        <appender-ref ref="STDOUT" />
+    </logger>
 
     <root>
         <level value="WARN"/>
