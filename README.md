@@ -117,6 +117,8 @@ Take `logback.xml` as an example, you can configure the appender and logger rela
     </credentialsProviderBuilder>
     <!-- optional, option for maximum exception stack trace recording length. Exceeding this length will result in truncation. The default value is 500.-->
     <maxThrowable>500</maxThrowable>
+    <!-- optional, time precision for log uploaded to log service, `s` for seconds and `ms` for milliseconds, default is `s` -->
+    <timePrecision>s</timePrecision>
   </appender>
 
   <!-- This listener will print the status in StatusManager to console
@@ -180,6 +182,8 @@ maxThrowable=500
 
 # Specify ingest processor, default is "", optional
 processor = [ingest processor]
+# time precision for log uploaded to log service
+timePrecision=s
 ```
 
 ## Custom CredentialsProvider

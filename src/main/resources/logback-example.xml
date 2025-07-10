@@ -84,6 +84,9 @@
             Optional Whether to include field message when encoder exists, defaults to true.-->
         <includeMessage>true</includeMessage>
 
+        <!-- 可选项 设置上传到 sls 的日志时间精度，支持秒 s 与毫秒 ms，默认为秒 -->
+        <timePrecision>s</timePrecision>
+
         <filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印INFO级别的日志 -->
             <level>INFO</level>
             <onMatch>ACCEPT</onMatch>
