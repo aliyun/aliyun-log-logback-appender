@@ -48,6 +48,9 @@ public class TestAppender {
     @Test
     public void testLogThrowable() {
         MDC.put("MDC_KEY","MDC_VALUE");
+        MDC.put("KEY1","Value1");
+        MDC.put("KEY2","Value2");
+        MDC.put("KEY3","Value3");
         MDC.put("THREAD_ID", String.valueOf(Thread.currentThread().getId()));
         LOGGER.error("This is a test error message logged by logback.",
                 new UnsupportedOperationException("Logback UnsupportedOperationException"));
