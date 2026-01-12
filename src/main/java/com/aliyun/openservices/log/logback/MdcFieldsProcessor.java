@@ -33,7 +33,6 @@ public class MdcFieldsProcessor {
         String[] fields = mdcFields.split(",");
 
         for (String field : fields) {
-            field = field.trim();
             if (field.isEmpty()) {
                 continue;
             }
@@ -44,12 +43,15 @@ public class MdcFieldsProcessor {
             }
 
             int equalsIndex = field.lastIndexOf('=');
-            if (equalsIndex > 0 && equalsIndex < field.length() - 1) {
-                String mdcName = field.substring(0, equalsIndex).trim();
-                String logFieldName = field.substring(equalsIndex + 1).trim();
-                renameMap.put(mdcName, logFieldName);
-            } else {
+            if (equalsIndex < 0) {
+                // No equals sign, treat as regular field name
                 renameMap.put(field, field);
+            } else {
+                String mdcName = field.substring(0, equalsIndex);
+                String logFieldName = field.substring(equalsIndex + 1);
+                if (!mdcName.isEmpty() && !logFieldName.isEmpty()) {
+                    renameMap.put(mdcName, logFieldName);
+                }
             }
         }
     }
