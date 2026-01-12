@@ -33,7 +33,12 @@
             <level>WARN</level>
         </filter>
 
-        <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
+        <!-- MDC 字段捕获配置（appender 可以从日志打印的 MDC 上下文中捕获字段，并将其添加到日志字段中）：
+             "*" - 捕获所有字段
+             "KEY1,KEY2" - 仅捕获指定字段 KEY1 和 KEY2
+             "KEY1=name1,KEY2,KEY3=name3" - 捕获字段 KEY1、KEY2、KEY3，其中 KEY1 重命名为日志的 name1 字段，KEY3 重命名为日志的 name3 字段
+             "*,KEY1=name1" - 默认捕获所有字段，其中 KEY1 重命名为日志的 name1 字段 -->
+        <mdcFields>THREAD_ID=thread_id,MDC_KEY</mdcFields>
     </appender>
 
     <appender name="loghubAppender2" class="com.aliyun.openservices.log.logback.LoghubAppender">
@@ -92,8 +97,8 @@
             <onMatch>ACCEPT</onMatch>
             <onMismatch>DENY</onMismatch>
         </filter>
-        <!-- in the format of "KEY1,KEY2,KEY3" or "*" to match all keys -->
-        <mdcFields>THREAD_ID,MDC_KEY</mdcFields>
+        <!-- MDC 字段配置示例：仅捕获 THREAD_ID 和 MDC_KEY，其中 THREAD_ID 重命名为 tid -->
+        <mdcFields>THREAD_ID=tid,MDC_KEY</mdcFields>
         <!-- 可选项，exception 堆栈最大记录长度，超出此长度会被截断，默认值为 500 -->
         <maxThrowable>500</maxThrowable>
     </appender>

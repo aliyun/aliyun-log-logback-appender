@@ -185,6 +185,15 @@ maxThrowable=500
 processor = [ingest processor]
 # 可选项 设置上传到 sls 的日志时间精度，支持秒 s 与毫秒 ms，默认为秒
 timePrecision=s
+# 可选项 MDC 字段捕获配置（appender 可以从日志打印的 MDC 上下文中捕获字段，并将其添加到日志字段中）
+# 格式：
+#   - "*" - 捕获所有字段
+#   - "KEY1,KEY2" - 仅捕获指定字段 KEY1 和 KEY2
+#   - "KEY1=name1,KEY2,KEY3=name3" - 捕获字段 KEY1、KEY2、KEY3，其中 KEY1 重命名为日志的 name1 字段，KEY3 重命名为日志的 name3 字段
+#   - "*,KEY1=name1" - 默认捕获所有字段，其中 KEY1 重命名为日志的 name1 字段
+# 示例：mdcFields=THREAD_ID=thread_id,MDC_KEY
+# 示例：mdcFields=*,traceId=trace_id,spanId=span_id
+mdcFields = [your mdc fields]
 ```
 参阅：https://github.com/aliyun/aliyun-log-producer-java
 
