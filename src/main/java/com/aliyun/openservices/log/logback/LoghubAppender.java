@@ -3,9 +3,7 @@ package com.aliyun.openservices.log.logback;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 import com.aliyun.openservices.log.common.auth.CredentialsProvider;
 import org.joda.time.DateTime;
@@ -72,6 +70,7 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     protected java.time.format.DateTimeFormatter formatter1;
     private String mdcFields;
+    private MdcFieldsProcessor mdcFieldsProcessor;
     private String processor;
 
     protected int maxThrowable = 500;
@@ -205,15 +204,14 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
             item.PushBack("throwable", throwableSub);
         }
 
-        // mdcFields can be "*" or format of "fieldA,FieldB,fieldC"
-        if (mdcFields != null && mdcFields.trim().equals("*")) { // "*" matches all fields, add all fields to item
-            event.getMDCPropertyMap().entrySet().forEach(e -> item.PushBack(e.getKey(), e.getValue()));
-        } else {
-            Optional.ofNullable(mdcFields).ifPresent(
-                    f -> event.getMDCPropertyMap().entrySet().stream()
-                            .filter(v -> Arrays.stream(f.split(",")).anyMatch(i -> i.equals(v.getKey())))
-                            .forEach(map -> item.PushBack(map.getKey(), map.getValue()))
-            );
+        // Process MDC fields with optional renaming
+        if (mdcFieldsProcessor != null) {
+            event.getMDCPropertyMap().forEach((mdcKey, mdcValue) -> {
+                String logFieldName = mdcFieldsProcessor.getLogFieldName(mdcKey);
+                if (logFieldName != null) {
+                    item.PushBack(logFieldName, mdcValue);
+                }
+            });
         }
 
         long ddlInMs = System.currentTimeMillis() + getMaxBlockMs();
@@ -426,6 +424,11 @@ public class LoghubAppender<E> extends UnsynchronizedAppenderBase<E> {
 
     public void setMdcFields(String mdcFields) {
         this.mdcFields = mdcFields;
+        this.mdcFieldsProcessor = new MdcFieldsProcessor(mdcFields);
+    }
+
+    public String getMdcFields() {
+        return mdcFields;
     }
 
     public boolean getIncludeLocation() {

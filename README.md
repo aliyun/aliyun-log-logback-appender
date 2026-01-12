@@ -184,6 +184,15 @@ maxThrowable=500
 processor = [ingest processor]
 # time precision for log uploaded to log service
 timePrecision=s
+# MDC fields capture configuration (appender can capture fields from logging MDC context and add them to log fields)
+# Format:
+#   - "*" - capture all fields
+#   - "KEY1,KEY2" - only capture specified fields KEY1 and KEY2
+#   - "KEY1=name1,KEY2,KEY3=name3" - capture fields KEY1, KEY2, KEY3; rename KEY1 to log field name1, KEY3 to name3
+#   - "*,KEY1=name1" - capture all fields by default, rename KEY1 to log field name1
+# Example: mdcFields=THREAD_ID=thread_id,MDC_KEY
+# Example: mdcFields=*,traceId=trace_id,spanId=span_id
+mdcFields = [your mdc fields]
 ```
 
 ## Custom CredentialsProvider
