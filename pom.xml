@@ -16,9 +16,12 @@
     <url>http://www.aliyun.com</url>
     <description>aliyun log logback appender</description>
     <licenses>
-        <license>
-            <name />
-            <url />
+distribution>
+            <license>
+distribution>
+            <name>Apache License, Version 2.0</name>
+distribution>
+            <url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
             <distribution>repo</distribution>
             <comments>Copyright (C) Alibaba Cloud Computing. All rights reserved.</comments>
         </license>
